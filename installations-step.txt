@@ -1,0 +1,10 @@
+npm i -g @angular/cli
+ng new angular
+npm i admin-lte@^latest --save
+ng build
+ng serve --open --port 4300
+
+add links and scripts for adminlte in angular.json
+
+add body class like adminlte body class
+copy content in app.component.html

@@ -1,0 +1,27 @@
+<div class="p-3 position-relative min-vh-100">
+    <ngx-spinner [fullScreen]="false" name="{{spinner.name}}" bdColor="rgba(255, 255, 255, .5)" size="medium"
+        color="#343a40" type="{{spinner.type}}"></ngx-spinner>
+    <div *ngIf="!isLoading">
+        <div class="form mb-3">
+            <label class="form-label">Choisir les classes</label>
+            <select [(ngModel)]="selectedClass" (ngModelChange)="onClassChange($event)" class="form-control"
+                id="allocation-algorithm">
+                <option *ngFor="let class of classes" [value]="class.id">{{class.name}} - {{class.description}}</option>
+            </select>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-4 col-12" *ngFor="let subclass of subclasses">
+                <div class="info-box p-3 class-box">
+                    <span class="info-box-icon bg-danger">{{subclass.name}}</span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text text-bold">{{subclass.class_name}}</span>
+                        <span class="info-box-number" style="font-weight: normal;">{{subclass.description}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

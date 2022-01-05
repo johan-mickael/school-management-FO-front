@@ -1,0 +1,79 @@
+<div class="position-relative min-vh-100 p-3">
+    <ngx-spinner [fullScreen]="false" name="{{spinner.name}}" bdColor="rgba(51,51,51,0.5)" size="medium" color="#343a40"
+        type="{{spinner.type}}">
+        <p class="text-light"></p>
+    </ngx-spinner>
+
+    <div *ngIf="!isLoading">
+        <div class="row">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a routerLink="/plannings">Plannings</a></li>
+                    <li class="breadcrumb-item active">Pointage</li>
+                </ol>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+        <form action="" method="POST">
+            <input type="hidden" name="_token" value="ilQzY07iiLWigwyNt5H3Hom29MVQlq9XPzeNjG7b">
+            <div class="card">
+                <div class="card-header" style="background-color: #343a40de; color: white;">
+                    <h3 class="card-title text-bold">Fiche de présence de la classe {{planning.subclass_name}}</h3>
+                </div>
+
+                <div class="card-body table-responsive table-bordered p-0" id="presence">
+                    <table class="table text-nowrap" style="page-break-inside:always;">
+                        <tbody>
+                            <tr>
+                                <th class="text-right" rowspan="2" colspan="1">
+                                    <h5 class="text-capitalize">{{planning.planning_date | date:'EEEE d MMMM y':
+                                        undefined:
+                                        'fr'}}</h5>
+                                    <p>
+                                        <span>{{planning.planning_date + ' ' + planning.start | date: 'shortTime':
+                                            undefined:
+                                            'fr'}} à {{planning.planning_date + ' ' + planning.end | date: 'shortTime':
+                                            undefined: 'fr'}}</span> -
+                                        <span class="text-uppercase">{{planning.place}}</span>
+                                    </p>
+                                </th>
+                                <th class="text-right" rowspan="1" colspan="4">
+                                    <h2 class="text-uppercase">{{planning.subject_description}} -
+                                        {{planning.subject_name}}</h2>
+                                    <h5 class="text-capitalize">{{planning.professor_name}}</h5>
+                                </th>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <th>Nom et prénoms</th>
+                                <th class="text-center">En salle</th>
+                                <th class="text-center">Présent</th>
+                                <th class="text-center">En Retard</th>
+                                <th class="text-right">Commentaires</th>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr app-pointing-row *ngFor="let student of students; let i = index"
+                                style="background-color: white;  page-break-inside:avoid; page-break-after:auto;"
+                                [student]="student" [index] = "i">
+                            </tr>
+                            <input type="hidden" name="COURSE_ID" value="4">
+                            <input type="hidden" name="SIZE" value="4">
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+
+            <div style="display: flex;justify-content: center;">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a (click)="makePDF()" class="mb-3 btn btn-mat btn-primary" sty="">Imprimer la fiche</a>
+                    <a (click)="makePDF()" class="mb-3 btn btn-mat btn-success" sty="">Sauvegarder</a>
+                    <a (click)="makePDF()" class="mb-3 btn btn-mat btn-danger" sty="">Terminer le cours</a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<td class="text-capitalize"><a href="">{{formatFullName(student)}}</a></td>
+<input type="hidden" name="STUDENT_ID_{{index}}" value="{{student.id}}">
+<td class="text-center">
+	<div class="icheck-success d-inline">
+		<input type="checkbox" id="a{{index}}" name="IS_PRESENT_CLASS_{{index}}">
+		<label for="a{{index}}">
+		</label>
+	</div>
+</td>
+<td class="text-center">
+	<div class="icheck-primary d-inline">
+		<input type="checkbox" id="b{{index}}" name="IS_PRESENT_{{index}}">
+		<label for="b{{index}}">
+		</label>
+	</div>
+</td>
+<td class="text-center">
+	<div class="icheck-danger d-inline">
+		<input type="checkbox" id="c{{index}}" name="IS_LATE_{{index}}">
+		<label for="c{{index}}">
+		</label>
+	</div>
+</td>
+<td style="padding: 0;">
+	<textarea style="border: none;" class="form-control" name="COMMENTS_{{index}}" rows="2"></textarea>
+</td>
