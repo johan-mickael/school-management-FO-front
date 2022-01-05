@@ -1,7 +1,5 @@
 import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 
-
-
 @Component({
 	selector: '[app-pointing-row]',
 	templateUrl: './pointing-row.component.html',
