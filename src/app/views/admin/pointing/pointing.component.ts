@@ -8,7 +8,6 @@ import { Planning, Student } from '../../../services/interfaces';
 import * as html2pdf from 'html2pdf.js';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormArray } from '@angular/forms';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-pointing',
@@ -53,48 +52,47 @@ export class PointingComponent implements OnInit {
       this.data = data;
       this.planning = this.data.planning as Planning;
       this.students = this.data.students as Student[];
+      this.generateRow(this.students.length)
     }, (error) => {
       this.errorService.handleError(error, this.spinner.name);
     }, async () => {
       this.isLoading = false;
       await this.spinnerService.hide(this.spinner.name);
-      this.initCheckboxScripts();
     });
   }
 
-  generateRow() {
-    const presences = this.form.controls["presences"] as FormArray;
-    presences.push(
-      this.formBuilder.group({
-        isPresentClass: '',
-        isPresent: '',
-        isLate: ''
-      })
-    );
+  get presences() {
+    return this.form.controls['presences'] as FormArray;
   }
 
-  initCheckboxScripts() {
-    $("input:checkbox").change(function () {
-      var ischecked = $(this).is(':checked');
-      const id = $(this).attr("id");
-      if (id != undefined) {
-        const num = id.substring(1);
-        if (ischecked) {
-          if (id[0] == 'a') {
-            $("#b" + num).prop('checked', true)
-          }
-          if (id[0] == 'c') {
-            $("#b" + num).prop('checked', true)
-          }
-        }
-        if (!ischecked) {
-          if (id[0] == 'b') {
-            $("#a" + num).prop('checked', false)
-            $("#c" + num).prop('checked', false)
-          }
-        }
-      }
-    });
+  generateRow(size: number) {
+    let student = this.formBuilder.group({
+      isPresentClass: '',
+      isPresent: '',
+      isLate: ''
+    })
+    for (let i = 0; i < this.students.length; i++) {
+      this.presences.push(student);
+    }
+  }
+
+  onChangePresentClass(checka: any, checkb: any, checkc: any, values: any): void {
+    if (values.currentTarget.checked) {
+      checkb.checked = true
+    }
+  }
+
+  onChangePresent(checka: any, checkb: any, checkc: any, values: any): void {
+    if (!values.currentTarget.checked) {
+      checka.checked = false
+      checkc.checked = false
+    }
+  }
+
+  onChangeLate(checka: any, checkb: any, checkc: any, values: any): void {
+    if (values.currentTarget.checked) {
+      checkb.checked = true
+    }
   }
 
   makePDF() {

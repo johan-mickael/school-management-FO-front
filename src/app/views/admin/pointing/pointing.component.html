@@ -15,15 +15,15 @@
       <div class="col-sm-6">
       </div>
     </div>
-    <form action="" method="POST" >
+    <form action="" method="POST" [formGroup]="form">
       <input type="hidden" name="_token" value="ilQzY07iiLWigwyNt5H3Hom29MVQlq9XPzeNjG7b">
       <div class="card">
         <div class="card-header" style="background-color: #343a40de; color: white;">
           <h3 class="card-title text-bold">Fiche de présence de la classe {{planning.subclass_name}}</h3>
         </div>
 
-        <div  class="card-body table-responsive table-bordered p-0" id="presence" >
-          <table  class="table text-nowrap" style="page-break-inside:always;">
+        <div class="card-body table-responsive table-bordered p-0" id="presence" formArrayName="presences">
+          <table class="table text-nowrap" style="page-break-inside:always;">
             <tbody>
               <tr>
                 <th class="text-right" rowspan="2" colspan="1">
@@ -53,26 +53,34 @@
                 <th class="text-right">Commentaires</th>
               </tr>
               <tr *ngFor="let student of students; let index = index"
-                style="background-color: white;  page-break-inside:avoid; page-break-after:auto;" >
-                <td class="text-capitalize"><a href="">{{ [student.first_name, student.last_name] | concatPipe }}</a></td>
+                style="background-color: white;  page-break-inside:avoid; page-break-after:auto;"
+                formGroupName="{{index}}">
+                <td class="text-capitalize"><a href="">{{ [student.first_name, student.last_name] | concatPipe }}</a>
+                </td>
                 <input type="hidden" name="STUDENT_ID_{{index}}" value="{{student.id}}">
                 <td class="text-center">
                   <div class="icheck-success d-inline">
-                    <input  class="presence-check" type="checkbox" id="a{{index}}" name="IS_PRESENT_CLASS_{{index}}">
+                    <input class="presence-check" type="checkbox" id="a{{index}}" name="IS_PRESENT_CLASS_{{index}}"
+                      formControlName="isPresentClass" #checka [value]="checka.checked"
+                      (change)="onChangePresentClass(checka, checkb, checkc, $event)">
                     <label for="a{{index}}">
                     </label>
                   </div>
                 </td>
                 <td class="text-center">
                   <div class="icheck-primary d-inline">
-                    <input class="presence-check" type="checkbox" id="b{{index}}" name="IS_PRESENT_{{index}}">
+                    <input class="presence-check" type="checkbox" id="b{{index}}" name="IS_PRESENT_{{index}}"
+                      formControlName="isPresent" #checkb [value]="checkb.checked"
+                      (change)="onChangePresent(checka, checkb, checkc, $event)">
                     <label for="b{{index}}">
                     </label>
                   </div>
                 </td>
                 <td class="text-center">
                   <div class="icheck-danger d-inline">
-                    <input class="presence-check" type="checkbox" id="c{{index}}" name="IS_LATE_{{index}}">
+                    <input class="presence-check" type="checkbox" id="c{{index}}" name="IS_LATE_{{index}}"
+                      formControlName="isLate" #checkc [value]="checkc.checked"
+                      (change)="onChangeLate(checka, checkb, checkc, $event)">
                     <label for="c{{index}}">
                     </label>
                   </div>
