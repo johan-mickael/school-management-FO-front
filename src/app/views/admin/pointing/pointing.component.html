@@ -62,24 +62,24 @@
                 </td>
                 <td class="text-center">
                   <div class="icheck-success d-inline">
-                    <input class="presence-check" type="checkbox" id="a{{index}}" formControlName="is_present_class"
-                      #checka [ngModel]="form.value.presences[index].is_present_class" (change)="onChangePresentClass(checkb, $event)">
+                    <input type="checkbox" id="a{{index}}" formControlName="is_present_class"
+                      #checka [ngModel]="form.value.presences[index].is_present_class" (change)="onChangePresentClass(checkb, index, $event)">
                     <label for="a{{index}}">
                     </label>
                   </div>
                 </td>
                 <td class="text-center">
                   <div class="icheck-primary d-inline">
-                    <input class="presence-check" type="checkbox" id="b{{index}}" formControlName="is_present" #checkb
-                      [ngModel]="form.value.presences[index].is_present" checked="disable" (change)="onChangePresent(checka, checkc, $event)">
+                    <input type="checkbox" id="b{{index}}" formControlName="is_present" #checkb
+                      [ngModel]="form.value.presences[index].is_present" (change)="onChangePresent(checka, checkc, index, $event)">
                     <label for="b{{index}}">
                     </label>
                   </div>
                 </td>
                 <td class="text-center">
                   <div class="icheck-danger d-inline">
-                    <input class="presence-check" type="checkbox" id="c{{index}}" formControlName="is_late" #checkc
-                      [ngModel]="form.value.presences[index].is_late" (change)="onChangeLate(checkb, $event)">
+                    <input type="checkbox" id="c{{index}}" formControlName="is_late" #checkc
+                      [ngModel]="form.value.presences[index].is_late" (change)="onChangeLate(checkb, index, $event)">
                     <label for="c{{index}}">
                     </label>
                   </div>

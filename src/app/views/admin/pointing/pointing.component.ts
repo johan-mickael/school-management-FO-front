@@ -108,26 +108,30 @@ export class PointingComponent implements OnInit {
     return this.form.controls['presences'] as FormArray;
   }
 
-  onChangePresentClass(checkb: any, values: any): void {
+  onChangePresentClass(checkb: any, index:number, values: any): void {
     if (values.currentTarget.checked) {
       checkb.checked = true
-      checkb.value = true
+      this.form.value.presences[index].is_present = true;
     }
+    console.log('a', this.form.value)
   }
 
-  onChangePresent(checka: any, checkc: any, values: any): void {
+  onChangePresent(checka: any, checkc: any, index:number, values: any): void {
     if (!values.currentTarget.checked) {
       checka.checked = false
       checkc.checked = false
-      checka.value = checkc.value = false
+      this.form.value.presences[index].is_present_class = false;
+      this.form.value.presences[index].is_late = false;
     }
+    console.log('b', this.form.value)
   }
 
-  onChangeLate(checkb: any, values: any): void {
+  onChangeLate(checkb: any, index:number, values: any): void {
     if (values.currentTarget.checked) {
       checkb.checked = true
-      checkb.value = true
+      this.form.value.presences[index].is_present = true;
     }
+    console.log('c', this.form.value)
   }
 
   newRow(student: Student, presence: any) {
