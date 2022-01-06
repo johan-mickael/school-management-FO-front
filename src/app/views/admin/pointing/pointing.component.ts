@@ -45,10 +45,10 @@ export class PointingComponent implements OnInit {
       class: 'badge badge-danger'
     }
   ]
-  readonly resources: string[] = ['plannings/', 'students/'];
   message: string;
   subscription: Subscription;
   data: any;
+  presencesData: any;
   planning: Planning;
   students: Student[];
   size: number;
@@ -61,6 +61,7 @@ export class PointingComponent implements OnInit {
   }
 
   async savePresences() {
+    console.log(this.form.value)
     await this.spinnerService.show(this.spinner.name);
     const success = async (data: any) => {
       await this.spinnerService.hide(this.spinner.name);
@@ -85,7 +86,9 @@ export class PointingComponent implements OnInit {
       this.data = data;
       this.planning = this.data.planning as Planning;
       this.students = this.data.students as Student[];
-      await this.generateRow(this.students)
+      this.presencesData = this.data.presences
+      await this.generateRow(this.students, this.presencesData)
+      console.log(this.form.value)
     }
     const error = async (error: any) => {
       await this.errorService.handleError(error, this.spinner.name);
@@ -94,7 +97,7 @@ export class PointingComponent implements OnInit {
       this.isLoading = false;
       await this.spinnerService.hide(this.spinner.name);
     }
-    this.resourceService.findOne(this.resources[0], planningId).subscribe({
+    this.resourceService.findOne('presences/', planningId).subscribe({
       next: success,
       error: error,
       complete: complete
@@ -105,7 +108,7 @@ export class PointingComponent implements OnInit {
     return this.form.controls['presences'] as FormArray;
   }
 
-  onChangePresentClass(checkb: any, checkc: any, values: any): void {
+  onChangePresentClass(checkb: any, values: any): void {
     if (values.currentTarget.checked) {
       checkb.checked = true
       checkb.value = true
@@ -127,20 +130,32 @@ export class PointingComponent implements OnInit {
     }
   }
 
-  newRow(student: Student) {
-    return this.formBuilder.group({
-      planning_id: 0,
-      student_id: 0,
-      is_present_class: false,
-      is_present: false,
-      is_late: false,
-      comment: ''
-    })
+  newRow(student: Student, presence: any) {
+    if (presence === undefined) {
+      var formGroup = {
+        planning_id: this.planning.id,
+        student_id: student.id,
+        is_present_class: false,
+        is_present: false,
+        is_late: false,
+        comment: ''
+      }
+    } else {
+      formGroup = {
+        planning_id: this.planning.id,
+        student_id: student.id,
+        is_present_class: presence.is_present_class,
+        is_present: presence.is_present,
+        is_late: presence.is_late,
+        comment: presence.comment
+      }
+    }
+    return this.formBuilder.group(formGroup)
   }
 
-  generateRow(students: Student[]) {
+  generateRow(students: Student[], presences: any) {
     for (let i = 0; i < students.length; i++) {
-      this.presences.push(this.newRow(students[i]));
+      this.presences.push(this.newRow(students[i], presences[i]));
     }
   }
 
