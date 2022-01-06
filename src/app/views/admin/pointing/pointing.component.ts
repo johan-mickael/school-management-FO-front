@@ -46,22 +46,19 @@ export class PointingComponent implements OnInit {
     this.fetchData();
   }
 
-  fetchData() {
-    this.spinnerService.show(this.spinner.name);
+  async fetchData() {
+    await this.spinnerService.show(this.spinner.name);
     const planningId = this.activatedRoute.snapshot.params['id'];
     this.resourceService.findOne(this.resources[0], planningId).subscribe(data => {
-      this.data = data
-      console.log(data)
-      this.planning = this.data.planning as Planning
-      this.students = this.data.students as Student[]
+      this.data = data;
+      this.planning = this.data.planning as Planning;
+      this.students = this.data.students as Student[];
     }, (error) => {
       this.errorService.handleError(error, this.spinner.name);
-    }, () => {
+    }, async () => {
       this.isLoading = false;
-      this.spinnerService.hide(this.spinner.name);
-      setTimeout(() => {
-        this.initCheckboxScripts()
-      }, 100);
+      await this.spinnerService.hide(this.spinner.name);
+      this.initCheckboxScripts();
     });
   }
 
@@ -89,6 +86,21 @@ export class PointingComponent implements OnInit {
         '_' + this.planning.start + '-' + this.planning.end);
   }
 
+  formatFullName(student: any) {
+    return student.first_name + ' ' + student.last_name;
+  }
+
+  generateRow() {
+    const presences = this.form.controls["presences"] as FormArray;
+    presences.push(
+      this.formBuilder.group({
+        isPresentClass: '',
+        isPresent: '',
+        isLate: ''
+      })
+    );
+  }
+
   initCheckboxScripts() {
     $("input:checkbox").change(function () {
       var ischecked = $(this).is(':checked');
@@ -112,20 +124,4 @@ export class PointingComponent implements OnInit {
       }
     });
   }
-
-  formatFullName(student: any) {
-    return student.first_name + ' ' + student.last_name;
-  }
-
-  generateRow() {
-    const presences = this.form.controls["presences"] as FormArray;
-    presences.push(
-      this.formBuilder.group({
-        isPresentClass: '',
-        isPresent: '',
-        isLate: ''
-      })
-    );
-  }
-
 }
