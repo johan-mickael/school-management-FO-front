@@ -48,16 +48,23 @@ export class PointingComponent implements OnInit {
   async fetchData() {
     await this.spinnerService.show(this.spinner.name);
     const planningId = this.activatedRoute.snapshot.params['id'];
-    this.resourceService.findOne(this.resources[0], planningId).subscribe(data => {
+    const success = async (data: any) => {
       this.data = data;
       this.planning = this.data.planning as Planning;
       this.students = this.data.students as Student[];
-      this.generateRow(this.students.length)
-    }, (error) => {
-      this.errorService.handleError(error, this.spinner.name);
-    }, async () => {
+      await this.generateRow(this.students.length)
+    }
+    const error = async (error: any) => {
+      await this.errorService.handleError(error, this.spinner.name);
+    }
+    const complete = async () => {
       this.isLoading = false;
       await this.spinnerService.hide(this.spinner.name);
+    }
+    this.resourceService.findOne(this.resources[0], planningId).subscribe({
+      next: success,
+      error: error,
+      complete: complete
     });
   }
 
@@ -76,20 +83,20 @@ export class PointingComponent implements OnInit {
     }
   }
 
-  onChangePresentClass(checka: any, checkb: any, checkc: any, values: any): void {
+  onChangePresentClass(checkb: any, checkc: any, values: any): void {
     if (values.currentTarget.checked) {
       checkb.checked = true
     }
   }
 
-  onChangePresent(checka: any, checkb: any, checkc: any, values: any): void {
+  onChangePresent(checka: any, checkc: any, values: any): void {
     if (!values.currentTarget.checked) {
       checka.checked = false
       checkc.checked = false
     }
   }
 
-  onChangeLate(checka: any, checkb: any, checkc: any, values: any): void {
+  onChangeLate(checkb: any, values: any): void {
     if (values.currentTarget.checked) {
       checkb.checked = true
     }
@@ -97,6 +104,8 @@ export class PointingComponent implements OnInit {
 
   makePDF() {
     var element = document.getElementById('presence');
+    const outputName = 'Presence_' + this.planning.subclass_name + '_' + this.planning.planning_date +
+      '_' + this.planning.start + '-' + this.planning.end;
     html2pdf()
       .from(element)
       .set({
@@ -115,7 +124,6 @@ export class PointingComponent implements OnInit {
           mode: ['avoid-all']
         }
       })
-      .save('Presence_' + this.planning.subclass_name + '_' + this.planning.planning_date +
-        '_' + this.planning.start + '-' + this.planning.end);
+      .save(outputName);
   }
 }

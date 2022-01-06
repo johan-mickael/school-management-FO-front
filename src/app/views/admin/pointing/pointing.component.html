@@ -25,7 +25,7 @@
         <div class="card-body table-responsive table-bordered p-0" id="presence" formArrayName="presences">
           <table class="table text-nowrap" style="page-break-inside:always;">
             <tbody>
-              <tr>
+              <tr style="background-color: aliceblue;">
                 <th class="text-right" rowspan="2" colspan="1">
                   <h5 class="text-capitalize">{{planning.planning_date | date:'EEEE d MMMM y':
                     undefined:
@@ -45,7 +45,7 @@
                 </th>
               </tr>
               <tr></tr>
-              <tr>
+              <tr style="background: rgb(248, 248, 237);">
                 <th>Nom et prénoms</th>
                 <th class="text-center">En salle</th>
                 <th class="text-center">Présent</th>
@@ -62,7 +62,7 @@
                   <div class="icheck-success d-inline">
                     <input class="presence-check" type="checkbox" id="a{{index}}" name="IS_PRESENT_CLASS_{{index}}"
                       formControlName="isPresentClass" #checka [value]="checka.checked"
-                      (change)="onChangePresentClass(checka, checkb, checkc, $event)">
+                      (change)="onChangePresentClass(checkb, checkc, $event)">
                     <label for="a{{index}}">
                     </label>
                   </div>
@@ -71,7 +71,7 @@
                   <div class="icheck-primary d-inline">
                     <input class="presence-check" type="checkbox" id="b{{index}}" name="IS_PRESENT_{{index}}"
                       formControlName="isPresent" #checkb [value]="checkb.checked"
-                      (change)="onChangePresent(checka, checkb, checkc, $event)">
+                      (change)="onChangePresent(checka, checkc, $event)">
                     <label for="b{{index}}">
                     </label>
                   </div>
@@ -79,8 +79,7 @@
                 <td class="text-center">
                   <div class="icheck-danger d-inline">
                     <input class="presence-check" type="checkbox" id="c{{index}}" name="IS_LATE_{{index}}"
-                      formControlName="isLate" #checkc [value]="checkc.checked"
-                      (change)="onChangeLate(checka, checkb, checkc, $event)">
+                      formControlName="isLate" #checkc [value]="checkc.checked" (change)="onChangeLate(checkb, $event)">
                     <label for="c{{index}}">
                     </label>
                   </div>
@@ -88,7 +87,6 @@
                 <td style="padding: 0;">
                   <textarea style="border: none;" class="form-control" name="COMMENTS_{{index}}" rows="2"></textarea>
                 </td>
-
               </tr>
               <input type="hidden" name="COURSE_ID" value="4">
               <input type="hidden" name="SIZE" value="4">

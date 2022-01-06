@@ -16,4 +16,13 @@ export class ResourceService {
   findOne(resource: string, id: number) {
     return this.httpClient.get(this.url + resource + id)
   }
+
+  savePresence(input: any) {
+    const options = {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    };
+    return this.httpClient.post(this.url + 'presences', input, options)
+  }
 }
