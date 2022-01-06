@@ -7,8 +7,8 @@ import { HttpClient } from '@angular/common/http';
 export class ResourceService {
 
   constructor(private httpClient: HttpClient) { }
-  readonly url: string = 'http://192.168.1.26:8000/api/';
-
+  // readonly url: string = 'http://192.168.1.26:8000/api/';
+  readonly url: string = 'http://localhost:8000/api/';
   findAll(resource: string) {
     return this.httpClient.get(this.url + resource);
   }
