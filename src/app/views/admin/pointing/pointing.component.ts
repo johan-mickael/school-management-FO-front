@@ -15,7 +15,7 @@ import { DOCUMENT } from '@angular/common';
   templateUrl: './pointing.component.html',
   styleUrls: ['./pointing.component.css']
 })
-export class PointingComponent implements OnInit, AfterViewInit {
+export class PointingComponent implements OnInit {
 
   constructor(
     private resourceService: ResourceService,
@@ -59,6 +59,9 @@ export class PointingComponent implements OnInit, AfterViewInit {
     }, () => {
       this.isLoading = false;
       this.spinnerService.hide(this.spinner.name);
+      setTimeout(() => {
+        this.initCheckboxScripts()
+      }, 100);
     });
   }
 
@@ -86,7 +89,7 @@ export class PointingComponent implements OnInit, AfterViewInit {
         '_' + this.planning.start + '-' + this.planning.end);
   }
 
-  ngAfterViewInit(): void {
+  initCheckboxScripts() {
     $("input:checkbox").change(function () {
       var ischecked = $(this).is(':checked');
       const id = $(this).attr("id");
