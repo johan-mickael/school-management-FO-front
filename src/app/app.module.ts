@@ -21,6 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PointingComponent } from './views/admin/pointing/pointing.component';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import { ConcatPipe } from './pipe/ConcatPipe';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -40,6 +41,7 @@ FullCalendarModule.registerPlugins([
 		ClassesComponent,
 		ErrorpageComponent,
 		PointingComponent,
+    ConcatPipe
 	],
 	imports: [
 		BrowserModule,

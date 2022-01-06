@@ -62,34 +62,6 @@ export class PointingComponent implements OnInit {
     });
   }
 
-  makePDF() {
-    var element = document.getElementById('presence');
-    html2pdf()
-      .from(element)
-      .set({
-        margin: [10, 5, 10, 5],
-        image: {
-          type: 'jpeg',
-          quality: 1
-        },
-        jsPDF: {
-          unit: 'mm',
-          format: 'A4',
-          orientation: 'landscape'
-        },
-        enableLinks: true,
-        pageBreak: {
-          mode: ['avoid-all']
-        }
-      })
-      .save('Presence_' + this.planning.subclass_name + '_' + this.planning.planning_date +
-        '_' + this.planning.start + '-' + this.planning.end);
-  }
-
-  formatFullName(student: any) {
-    return student.first_name + ' ' + student.last_name;
-  }
-
   generateRow() {
     const presences = this.form.controls["presences"] as FormArray;
     presences.push(
@@ -123,5 +95,29 @@ export class PointingComponent implements OnInit {
         }
       }
     });
+  }
+
+  makePDF() {
+    var element = document.getElementById('presence');
+    html2pdf()
+      .from(element)
+      .set({
+        margin: [10, 5, 10, 5],
+        image: {
+          type: 'jpeg',
+          quality: 1
+        },
+        jsPDF: {
+          unit: 'mm',
+          format: 'A4',
+          orientation: 'landscape'
+        },
+        enableLinks: true,
+        pageBreak: {
+          mode: ['avoid-all']
+        }
+      })
+      .save('Presence_' + this.planning.subclass_name + '_' + this.planning.planning_date +
+        '_' + this.planning.start + '-' + this.planning.end);
   }
 }

@@ -54,7 +54,7 @@
               </tr>
               <tr *ngFor="let student of students; let index = index"
                 style="background-color: white;  page-break-inside:avoid; page-break-after:auto;" >
-                <td class="text-capitalize"><a href="">{{formatFullName(student)}}</a></td>
+                <td class="text-capitalize"><a href="">{{ [student.first_name, student.last_name] | concatPipe }}</a></td>
                 <input type="hidden" name="STUDENT_ID_{{index}}" value="{{student.id}}">
                 <td class="text-center">
                   <div class="icheck-success d-inline">
