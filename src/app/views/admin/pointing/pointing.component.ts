@@ -25,12 +25,26 @@ export class PointingComponent implements OnInit {
   ) { }
 
   form = this.formBuilder.group({
-    presences: this.formBuilder.array([])
+    presences: this.formBuilder.array([]),
   });
   readonly spinner = {
     name: "pointing-spinner",
     type: "line-scale"
   };
+  readonly status = [
+    {
+      text: 'en cours',
+      class: 'badge badge-warning'
+    },
+    {
+      text: 'enregistré',
+      class: 'badge badge-success'
+    },
+    {
+      text: 'terminé',
+      class: 'badge badge-danger'
+    }
+  ]
   readonly resources: string[] = ['plannings/', 'students/'];
   message: string;
   subscription: Subscription;
@@ -42,17 +56,36 @@ export class PointingComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
+    this.spinnerService.show(this.spinner.name);
     this.fetchData();
   }
 
-  async fetchData() {
+  async savePresences() {
     await this.spinnerService.show(this.spinner.name);
+    const success = async (data: any) => {
+      await this.spinnerService.hide(this.spinner.name);
+    }
+    const error = async (error: any) => {
+      await this.errorService.handleError(error, this.spinner.name);
+    }
+    const complete = async () => {
+      await this.fetchData()
+    }
+    this.resourceService.savePresence(this.form.value).subscribe({
+      next: success,
+      error: error,
+      complete: complete
+    });
+  }
+
+  async fetchData() {
     const planningId = this.activatedRoute.snapshot.params['id'];
+    this.presences.clear();
     const success = async (data: any) => {
       this.data = data;
       this.planning = this.data.planning as Planning;
       this.students = this.data.students as Student[];
-      await this.generateRow(this.students.length)
+      await this.generateRow(this.students)
     }
     const error = async (error: any) => {
       await this.errorService.handleError(error, this.spinner.name);
@@ -72,20 +105,10 @@ export class PointingComponent implements OnInit {
     return this.form.controls['presences'] as FormArray;
   }
 
-  generateRow(size: number) {
-    let student = this.formBuilder.group({
-      isPresentClass: '',
-      isPresent: '',
-      isLate: ''
-    })
-    for (let i = 0; i < this.students.length; i++) {
-      this.presences.push(student);
-    }
-  }
-
   onChangePresentClass(checkb: any, checkc: any, values: any): void {
     if (values.currentTarget.checked) {
       checkb.checked = true
+      checkb.value = true
     }
   }
 
@@ -93,12 +116,31 @@ export class PointingComponent implements OnInit {
     if (!values.currentTarget.checked) {
       checka.checked = false
       checkc.checked = false
+      checka.value = checkc.value = false
     }
   }
 
   onChangeLate(checkb: any, values: any): void {
     if (values.currentTarget.checked) {
       checkb.checked = true
+      checkb.value = true
+    }
+  }
+
+  newRow(student: Student) {
+    return this.formBuilder.group({
+      planning_id: 0,
+      student_id: 0,
+      is_present_class: false,
+      is_present: false,
+      is_late: false,
+      comment: ''
+    })
+  }
+
+  generateRow(students: Student[]) {
+    for (let i = 0; i < students.length; i++) {
+      this.presences.push(this.newRow(students[i]));
     }
   }
 

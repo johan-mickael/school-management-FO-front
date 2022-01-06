@@ -35,6 +35,7 @@ export interface Planning {
     end: string,
     is_remote: number,
     description: string,
+    status: number,
     subject_name: string,
     subject_description: string,
     professor_name: string

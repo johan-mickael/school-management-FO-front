@@ -20,9 +20,9 @@ export class ResourceService {
   savePresence(input: any) {
     const options = {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type' : 'application/json',
       }
     };
-    return this.httpClient.post(this.url + 'presences', input, options)
+    return this.httpClient.post(this.url + 'presences', JSON.stringify(input), options)
   }
 }

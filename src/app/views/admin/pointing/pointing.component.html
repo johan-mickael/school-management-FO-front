@@ -20,6 +20,7 @@
       <div class="card">
         <div class="card-header" style="background-color: #343a40de; color: white;">
           <h3 class="card-title text-bold">Fiche de présence de la classe {{planning.subclass_name}}</h3>
+          <span class="{{status[planning.status].class}} float-right" style="font-size:1rem">{{ status[planning.status].text }}</span>
         </div>
 
         <div class="card-body table-responsive table-bordered p-0" id="presence" formArrayName="presences">
@@ -55,41 +56,38 @@
               <tr *ngFor="let student of students; let index = index"
                 style="background-color: white;  page-break-inside:avoid; page-break-after:auto;"
                 formGroupName="{{index}}">
+                <input type="hidden" formControlName="student_id" [(ngModel)]="student.id"/>
+                <input type="hidden" formControlName="planning_id" [(ngModel)]="planning.id"/>
                 <td class="text-capitalize"><a href="">{{ [student.first_name, student.last_name] | concatPipe }}</a>
                 </td>
-                <input type="hidden" name="STUDENT_ID_{{index}}" value="{{student.id}}">
                 <td class="text-center">
                   <div class="icheck-success d-inline">
-                    <input class="presence-check" type="checkbox" id="a{{index}}" name="IS_PRESENT_CLASS_{{index}}"
-                      formControlName="isPresentClass" #checka [value]="checka.checked"
-                      (change)="onChangePresentClass(checkb, checkc, $event)">
+                    <input class="presence-check" type="checkbox" id="a{{index}}" formControlName="is_present_class"
+                      #checka [(ngModel)]="checka.checked" (change)="onChangePresentClass(checkb, checkc, $event)">
                     <label for="a{{index}}">
                     </label>
                   </div>
                 </td>
                 <td class="text-center">
                   <div class="icheck-primary d-inline">
-                    <input class="presence-check" type="checkbox" id="b{{index}}" name="IS_PRESENT_{{index}}"
-                      formControlName="isPresent" #checkb [value]="checkb.checked"
-                      (change)="onChangePresent(checka, checkc, $event)">
+                    <input class="presence-check" type="checkbox" id="b{{index}}" formControlName="is_present" #checkb
+                      [(ngModel)]="checkb.checked" (change)="onChangePresent(checka, checkc, $event)">
                     <label for="b{{index}}">
                     </label>
                   </div>
                 </td>
                 <td class="text-center">
                   <div class="icheck-danger d-inline">
-                    <input class="presence-check" type="checkbox" id="c{{index}}" name="IS_LATE_{{index}}"
-                      formControlName="isLate" #checkc [value]="checkc.checked" (change)="onChangeLate(checkb, $event)">
+                    <input class="presence-check" type="checkbox" id="c{{index}}" formControlName="is_late" #checkc
+                      [(ngModel)]="checkc.checked" (change)="onChangeLate(checkb, $event)">
                     <label for="c{{index}}">
                     </label>
                   </div>
                 </td>
                 <td style="padding: 0;">
-                  <textarea style="border: none;" class="form-control" name="COMMENTS_{{index}}" rows="2"></textarea>
+                  <textarea style="border: none;" class="form-control" rows="2" formControlName="comment"></textarea>
                 </td>
               </tr>
-              <input type="hidden" name="COURSE_ID" value="4">
-              <input type="hidden" name="SIZE" value="4">
             </tbody>
           </table>
         </div>
@@ -99,8 +97,8 @@
       <div style="display: flex;justify-content: center;">
         <div class="btn-group" role="group" aria-label="Basic example">
           <a (click)="makePDF()" class="mb-3 btn btn-mat btn-primary" sty="">Imprimer la fiche</a>
-          <a (click)="makePDF()" class="mb-3 btn btn-mat btn-success" sty="">Sauvegarder</a>
-          <a (click)="makePDF()" class="mb-3 btn btn-mat btn-danger" sty="">Terminer le cours</a>
+          <a (click)="savePresences()" class="mb-3 btn btn-mat btn-success" sty="">Sauvegarder</a>
+          <a class="mb-3 btn btn-mat btn-danger" sty="">Terminer le cours</a>
         </div>
       </div>
 
