@@ -95,12 +95,12 @@
             </tbody>
           </table>
         </div>
-        <!-- /.card-body -->
       </div>
 
       <div style="display: flex;justify-content: center;">
         <div class="btn-group" role="group" aria-label="Basic example">
-          <a *ngIf="planning.status > 0" (click)="makePDF()" class="mb-3 btn btn-mat btn-primary" sty="">Imprimer la fiche</a>
+          <a *ngIf="planning.status > 0" (click)="makePDF()" class="mb-3 btn btn-mat btn-primary" sty="">Imprimer la
+            fiche</a>
           <a *ngIf="planning.status !== 2" (click)="savePresences()" class="mb-3 btn btn-mat btn-success"
             sty="">Sauvegarder</a>
           <a *ngIf="planning.status !== 2" (click)="endPlanning()" class="mb-3 btn btn-mat btn-danger" sty="">Terminer

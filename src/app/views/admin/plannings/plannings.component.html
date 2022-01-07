@@ -5,7 +5,7 @@
     </ngx-spinner>
     <div *ngIf="dataLoaded | async">
         <label class="form-label">Choisir une classe</label>
-        <select [(ngModel)]="selectedClass" (ngModelChange)="onClassChange($event)" class="form-control"
+        <select [(ngModel)]="selectedClass" (ngModelChange)="onClassChange()" class="form-control"
             id="allocation-algorithm">
             <option *ngFor="let class of classes" [value]="class.id">{{class.name}}</option>
         </select>

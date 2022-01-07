@@ -55,8 +55,6 @@ export class PointingComponent implements OnInit {
   dataLoaded: Promise<boolean>;
   done: boolean | string;
 
-  disabled: 'disabled'
-
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
     this.spinnerService.show(this.spinner.name);

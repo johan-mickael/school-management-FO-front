@@ -33,41 +33,59 @@ export class ClassesComponent implements OnInit {
     }
   ];
   subclasses: Subclass[] = [];
-
   message: string = '';
   subscription: Subscription = new Subscription;
-
-  isLoading: boolean = true;
+  dataLoaded: Promise<boolean>;
 
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
     this.fetchData();
   }
 
-  fetchData() {
-    this.spinnerService.show(this.spinner.name);
-    this.resourceService.findAll(this.resources[0]).subscribe(data => {
+  async fetchData() {
+    await this.spinnerService.show(this.spinner.name);
+    var success = async (data: any) => {
       this.subclasses = data as Subclass[]
-    }, (error) => {
+    }
+    var error = async (error: any) => {
       this.errorService.handleError(error, this.spinner.name);
+    }
+    await this.resourceService.findAll(this.resources[0]).subscribe({
+      next: success,
+      error: error
     });
-    this.resourceService.findAll(this.resources[1]).subscribe(data => {
+    success = async (data: any) => {
       this.populateClassSelectInput(data);
-    }, (error) => {
+    }
+    error = async (error: any) => {
       this.errorService.handleError(error, this.spinner.name);
-    }, () => {
+    }
+    const complete = async () => {
       this.spinnerService.hide(this.spinner.name);
-      this.isLoading = false;
-    })
+      this.dataLoaded = Promise.resolve(true);
+    }
+    await this.resourceService.findAll(this.resources[1]).subscribe({
+      next: success,
+      error: error,
+      complete: complete
+    });
   }
 
-  onClassChange(changes: SimpleChanges): void {
-    this.spinnerService.show(this.spinner.name);
-    this.resourceService.findOne(this.resources[0], this.selectedClass).subscribe(data => {
+  async onClassChange() {
+    await this.spinnerService.show(this.spinner.name);
+    const success = async (data: any) => {
       this.subclasses = data as Subclass[]
-      this.spinnerService.hide(this.spinner.name);
-    }, (error) => {
+    }
+    const error = async (error: any) => {
       this.errorService.handleError(error, this.spinner.name);
+    }
+    const complete = async () => {
+      this.spinnerService.hide(this.spinner.name);
+    }
+    this.resourceService.findOne(this.resources[0], this.selectedClass).subscribe({
+      next: success,
+      error: error,
+      complete: complete
     });
   }
 
