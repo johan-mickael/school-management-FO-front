@@ -24,7 +24,7 @@ export class PointingComponent implements OnInit {
     private formBuilder: FormBuilder,
   ) { }
 
-  form = this.formBuilder.group({
+  presenceForm = this.formBuilder.group({
     presences: this.formBuilder.array([]),
   });
   readonly spinner = {
@@ -52,7 +52,8 @@ export class PointingComponent implements OnInit {
   planning: Planning;
   students: Student[];
   size: number;
-  isLoading: boolean = true;
+  dataLoaded: Promise<boolean>;
+  done: boolean;
 
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
@@ -61,7 +62,6 @@ export class PointingComponent implements OnInit {
   }
 
   async savePresences() {
-    console.log(this.form.value)
     await this.spinnerService.show(this.spinner.name);
     const success = async (data: any) => {
       await this.spinnerService.hide(this.spinner.name);
@@ -72,7 +72,25 @@ export class PointingComponent implements OnInit {
     const complete = async () => {
       await this.fetchData()
     }
-    this.resourceService.savePresence(this.form.value).subscribe({
+    this.resourceService.savePresence(this.presenceForm.value).subscribe({
+      next: success,
+      error: error,
+      complete: complete
+    });
+  }
+
+  async endPlanning() {
+    await this.spinnerService.show(this.spinner.name);
+    const success = async (data: any) => {
+      await this.spinnerService.hide(this.spinner.name);
+    }
+    const error = async (error: any) => {
+      await this.errorService.handleError(error, this.spinner.name);
+    }
+    const complete = async () => {
+      await this.fetchData()
+    }
+    this.resourceService.endPlanning(this.presenceForm.value).subscribe({
       next: success,
       error: error,
       complete: complete
@@ -86,15 +104,16 @@ export class PointingComponent implements OnInit {
       this.data = data;
       this.planning = this.data.planning as Planning;
       this.students = this.data.students as Student[];
-      this.presencesData = this.data.presences
+      this.presencesData = this.data.presences;
+      this.done = (this.planning.status == 2) ? true : false;
       await this.generateRow(this.students, this.presencesData)
-      console.log(this.form.value)
+
     }
     const error = async (error: any) => {
       await this.errorService.handleError(error, this.spinner.name);
     }
     const complete = async () => {
-      this.isLoading = false;
+      this.dataLoaded = Promise.resolve(true);
       await this.spinnerService.hide(this.spinner.name);
     }
     this.resourceService.findOne('presences/', planningId).subscribe({
@@ -105,33 +124,30 @@ export class PointingComponent implements OnInit {
   }
 
   get presences() {
-    return this.form.controls['presences'] as FormArray;
+    return this.presenceForm.controls['presences'] as FormArray;
   }
 
-  onChangePresentClass(checkb: any, index:number, values: any): void {
+  onChangePresentClass(checkb: any, index: number, values: any): void {
     if (values.currentTarget.checked) {
-      checkb.checked = true
-      this.form.value.presences[index].is_present = true;
+      this.presenceForm.value.presences[index].is_present = true;
     }
-    console.log('a', this.form.value)
   }
 
-  onChangePresent(checka: any, checkc: any, index:number, values: any): void {
+  onChangePresent(checka: any, checkc: any, index: number, values: any): void {
     if (!values.currentTarget.checked) {
-      checka.checked = false
-      checkc.checked = false
-      this.form.value.presences[index].is_present_class = false;
-      this.form.value.presences[index].is_late = false;
+      setTimeout(() => {
+        this.presenceForm.value.presences[index].is_late = false;
+      }, 0);
+      setTimeout(() => {
+        this.presenceForm.value.presences[index].is_present_class = false;
+      }, 0);
     }
-    console.log('b', this.form.value)
   }
 
-  onChangeLate(checkb: any, index:number, values: any): void {
+  onChangeLate(checkb: any, index: number, values: any): void {
     if (values.currentTarget.checked) {
-      checkb.checked = true
-      this.form.value.presences[index].is_present = true;
+      this.presenceForm.value.presences[index].is_present = true;
     }
-    console.log('c', this.form.value)
   }
 
   newRow(student: Student, presence: any) {

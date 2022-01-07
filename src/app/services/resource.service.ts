@@ -9,6 +9,13 @@ export class ResourceService {
   constructor(private httpClient: HttpClient) { }
   // readonly url: string = 'http://192.168.1.26:8000/api/';
   readonly url: string = 'http://localhost:8000/api/';
+
+  options = {
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  };
+
   findAll(resource: string) {
     return this.httpClient.get(this.url + resource);
   }
@@ -18,11 +25,10 @@ export class ResourceService {
   }
 
   savePresence(input: any) {
-    const options = {
-      headers: {
-        'Content-Type' : 'application/json',
-      }
-    };
-    return this.httpClient.post(this.url + 'presences', JSON.stringify(input), options)
+    return this.httpClient.post(this.url + 'presences/save', JSON.stringify(input), this.options)
+  }
+
+  endPlanning(input: any) {
+    return this.httpClient.post(this.url + 'presences/terminate', JSON.stringify(input), this.options)
   }
 }

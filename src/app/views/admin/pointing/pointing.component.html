@@ -4,7 +4,7 @@
     <p class="text-light"></p>
   </ngx-spinner>
 
-  <div *ngIf="!isLoading">
+  <div *ngIf="dataLoaded | async">
     <div class="row">
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-left">
@@ -15,12 +15,13 @@
       <div class="col-sm-6">
       </div>
     </div>
-    <form action="" method="POST" [formGroup]="form">
+    <form action="" method="POST" [formGroup]="presenceForm">
       <input type="hidden" name="_token" value="ilQzY07iiLWigwyNt5H3Hom29MVQlq9XPzeNjG7b">
       <div class="card">
         <div class="card-header" style="background-color: #343a40de; color: white;">
           <h3 class="card-title text-bold">Fiche de présence de la classe {{planning.subclass_name}}</h3>
-          <span class="{{status[planning.status].class}} float-right" style="font-size:1rem">{{ status[planning.status].text }}</span>
+          <span class="{{status[planning.status].class}} float-right" style="font-size:1rem">{{
+            status[planning.status].text }}</span>
         </div>
 
         <div class="card-body table-responsive table-bordered p-0" id="presence" formArrayName="presences">
@@ -56,14 +57,15 @@
               <tr *ngFor="let student of students; let index = index"
                 style="background-color: white;  page-break-inside:avoid; page-break-after:auto;"
                 formGroupName="{{index}}">
-                <input type="hidden" formControlName="student_id" [(ngModel)]="student.id"/>
-                <input type="hidden" formControlName="planning_id" [(ngModel)]="planning.id"/>
+                <input type="hidden" formControlName="student_id" [(ngModel)]="student.id" />
+                <input type="hidden" formControlName="planning_id" [(ngModel)]="planning.id" />
                 <td class="text-capitalize"><a href="">{{ [student.first_name, student.last_name] | concatPipe }}</a>
                 </td>
                 <td class="text-center">
                   <div class="icheck-success d-inline">
-                    <input type="checkbox" id="a{{index}}" formControlName="is_present_class"
-                      #checka [ngModel]="form.value.presences[index].is_present_class" (change)="onChangePresentClass(checkb, index, $event)">
+                    <input type="checkbox" id="a{{index}}" formControlName="is_present_class" #checka
+                      [ngModel]="presenceForm.value.presences[index].is_present_class"
+                      (change)="onChangePresentClass(checkb, index, $event)" [attr.disabled]="done">
                     <label for="a{{index}}">
                     </label>
                   </div>
@@ -71,7 +73,8 @@
                 <td class="text-center">
                   <div class="icheck-primary d-inline">
                     <input type="checkbox" id="b{{index}}" formControlName="is_present" #checkb
-                      [ngModel]="form.value.presences[index].is_present" (change)="onChangePresent(checka, checkc, index, $event)">
+                      [ngModel]="presenceForm.value.presences[index].is_present"
+                      (change)="onChangePresent(checka, checkc, index, $event)" [attr.disabled]="done">
                     <label for="b{{index}}">
                     </label>
                   </div>
@@ -79,7 +82,8 @@
                 <td class="text-center">
                   <div class="icheck-danger d-inline">
                     <input type="checkbox" id="c{{index}}" formControlName="is_late" #checkc
-                      [ngModel]="form.value.presences[index].is_late" (change)="onChangeLate(checkb, index, $event)">
+                      [ngModel]="presenceForm.value.presences[index].is_late"
+                      (change)="onChangeLate(checkb, index, $event)" [attr.disabled]="done">
                     <label for="c{{index}}">
                     </label>
                   </div>
@@ -97,8 +101,10 @@
       <div style="display: flex;justify-content: center;">
         <div class="btn-group" role="group" aria-label="Basic example">
           <a (click)="makePDF()" class="mb-3 btn btn-mat btn-primary" sty="">Imprimer la fiche</a>
-          <a (click)="savePresences()" class="mb-3 btn btn-mat btn-success" sty="">Sauvegarder</a>
-          <a class="mb-3 btn btn-mat btn-danger" sty="">Terminer le cours</a>
+          <div *ngIf="planning.status !== 2">
+            <a (click)="savePresences()" class="mb-3 btn btn-mat btn-success" sty="">Sauvegarder</a>
+            <a (click)="endPlanning()" class="mb-3 btn btn-mat btn-danger" sty="">Terminer le cours</a>
+          </div>
         </div>
       </div>
 

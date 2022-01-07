@@ -3,7 +3,7 @@
         color="#343a40" type="{{spinner.type}}">
         <p class="text-light"></p>
     </ngx-spinner>
-    <div *ngIf="!isLoading">
+    <div *ngIf="dataLoaded | async">
         <label class="form-label">Choisir une classe</label>
         <select [(ngModel)]="selectedClass" (ngModelChange)="onClassChange($event)" class="form-control"
             id="allocation-algorithm">
@@ -12,8 +12,4 @@
 
         <full-calendar id="full-calendar" class="border mt-2" [options]="calendarOptions"></full-calendar>
     </div>
-
-
-
-
 </div>

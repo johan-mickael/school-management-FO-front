@@ -82,7 +82,7 @@ export class PlanningsComponent implements OnInit, OnDestroy {
   message: string = '';
   subscription: Subscription = new Subscription;
 
-  isLoading: boolean = true;
+  dataLoaded: Promise<boolean>;
 
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
@@ -124,7 +124,7 @@ export class PlanningsComponent implements OnInit, OnDestroy {
       this.errorService.handleError(error, this.spinner.name);
     }, () => {
       this.spinnerService.hide(this.spinner.name);
-      this.isLoading = false;
+      this.dataLoaded = Promise.resolve(true);
     })
   }
 
