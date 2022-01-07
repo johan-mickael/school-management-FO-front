@@ -82,21 +82,24 @@ export class PointingComponent implements OnInit {
   }
 
   async endPlanning() {
-    await this.spinnerService.show(this.spinner.name);
-    const success = async (data: any) => {
-      await this.spinnerService.hide(this.spinner.name);
+    if (confirm('Voulez-vous vraiment terminer le cours ?')) {
+      await this.spinnerService.show(this.spinner.name);
+      const success = async (data: any) => {
+        await this.spinnerService.hide(this.spinner.name);
+      }
+      const error = async (error: any) => {
+        await this.errorService.handleError(error, this.spinner.name);
+      }
+      const complete = async () => {
+        await this.fetchData()
+      }
+      this.resourceService.endPlanning(this.presenceForm.value).subscribe({
+        next: success,
+        error: error,
+        complete: complete
+      });
     }
-    const error = async (error: any) => {
-      await this.errorService.handleError(error, this.spinner.name);
-    }
-    const complete = async () => {
-      await this.fetchData()
-    }
-    this.resourceService.endPlanning(this.presenceForm.value).subscribe({
-      next: success,
-      error: error,
-      complete: complete
-    });
+
   }
 
   async fetchData() {
