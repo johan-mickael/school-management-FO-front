@@ -53,7 +53,9 @@ export class PointingComponent implements OnInit {
   students: Student[];
   size: number;
   dataLoaded: Promise<boolean>;
-  done: boolean;
+  done: boolean | string;
+
+  disabled: 'disabled'
 
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
@@ -106,6 +108,7 @@ export class PointingComponent implements OnInit {
       this.students = this.data.students as Student[];
       this.presencesData = this.data.presences;
       this.done = (this.planning.status == 2) ? true : false;
+      console.log(this.done)
       await this.generateRow(this.students, this.presencesData)
 
     }

@@ -65,7 +65,7 @@
                   <div class="icheck-success d-inline">
                     <input type="checkbox" id="a{{index}}" formControlName="is_present_class" #checka
                       [ngModel]="presenceForm.value.presences[index].is_present_class"
-                      (change)="onChangePresentClass(checkb, index, $event)" [attr.disabled]="done">
+                      (change)="onChangePresentClass(checkb, index, $event)" [attr.disabled]="done ? '' : null">
                     <label for="a{{index}}">
                     </label>
                   </div>
@@ -74,7 +74,7 @@
                   <div class="icheck-primary d-inline">
                     <input type="checkbox" id="b{{index}}" formControlName="is_present" #checkb
                       [ngModel]="presenceForm.value.presences[index].is_present"
-                      (change)="onChangePresent(checka, checkc, index, $event)" [attr.disabled]="done">
+                      (change)="onChangePresent(checka, checkc, index, $event)" [attr.disabled]="done ? '' : null">
                     <label for="b{{index}}">
                     </label>
                   </div>
@@ -83,7 +83,7 @@
                   <div class="icheck-danger d-inline">
                     <input type="checkbox" id="c{{index}}" formControlName="is_late" #checkc
                       [ngModel]="presenceForm.value.presences[index].is_late"
-                      (change)="onChangeLate(checkb, index, $event)" [attr.disabled]="done">
+                      (change)="onChangeLate(checkb, index, $event)" [attr.disabled]="done ? '' : null">
                     <label for="c{{index}}">
                     </label>
                   </div>
