@@ -23,6 +23,7 @@ import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { ConcatPipe } from './pipe/ConcatPipe';
 import { StudentsComponent } from './views/admin/classes/students/students.component';
+import { SubclassesComponent } from './views/admin/classes/subclasses/subclasses.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -43,7 +44,8 @@ FullCalendarModule.registerPlugins([
 		ErrorpageComponent,
 		PointingComponent,
     ConcatPipe,
-    StudentsComponent
+    StudentsComponent,
+    SubclassesComponent
 	],
 	imports: [
 		BrowserModule,

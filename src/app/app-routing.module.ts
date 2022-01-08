@@ -4,6 +4,7 @@ import { PlanningsComponent } from './views/admin/plannings/plannings.component'
 import { ClassesComponent } from './views/admin/classes/classes.component';
 import { ErrorpageComponent } from './views/layouts/errorpage/errorpage.component';
 import { PointingComponent } from './views/admin/pointing/pointing.component';
+import { StudentsComponent } from './views/admin/classes/students/students.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'plannings', pathMatch: 'full' },

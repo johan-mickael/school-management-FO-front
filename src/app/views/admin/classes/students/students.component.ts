@@ -3,6 +3,7 @@ import { ResourceService } from '../../../../services/resource.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ErrorService } from '../../../../services/error.service';
 import { SchoolYear, Student } from '../../../../services/interfaces';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-students',
@@ -14,11 +15,13 @@ export class StudentsComponent implements OnInit, OnChanges {
   constructor(
     private resourceService: ResourceService,
     private spinnerService: NgxSpinnerService,
-    private errorService: ErrorService
+    private errorService: ErrorService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) { }
 
   @Input() subclassId: number;
-  selectedSchoolYearId: number;
+  @Input() schoolYearId: number;
   schoolYears: SchoolYear[];
   students: Student[];
   dataLoaded: Promise<boolean>;
@@ -34,7 +37,18 @@ export class StudentsComponent implements OnInit, OnChanges {
     autoWidth: true
   }
 
+  getRouteParams() {
+    this.subclassId = this.activatedRoute.snapshot.params['subclassId'];
+    this.schoolYearId = this.activatedRoute.snapshot.params['schoolYearId'];
+  }
+
   async ngOnInit() {
+    this.getRouteParams();
+    this.router.events.subscribe(event => {
+      if (event.constructor.name === 'NavigationStart') {
+        this.getRouteParams();
+      }
+    });
     await this.fetchData();
     await this.spinnerService.hide(this.studentTableSpinner.name);
     this.dataLoaded = Promise.resolve(true);
@@ -59,34 +73,14 @@ export class StudentsComponent implements OnInit, OnChanges {
     const error = async (error: any) => {
       this.errorService.handleError(error, this.classSpinner);
     }
-    this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.selectedSchoolYearId + '/').subscribe({
+    this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.schoolYearId + '/').subscribe({
       next: success,
       error: error
     });
   }
 
-  async getSchoolYear() {
-    const success = async (data: any) => {
-      this.schoolYears = data as SchoolYear[];
-      this.selectedSchoolYearId = this.schoolYears[0].id
-    }
-    const error = async (error: any) => {
-      this.errorService.handleError(error, this.classSpinner);
-    }
-    const complete = async () => {
-      this.spinnerService.hide(this.classSpinner);
-      this.dataLoaded = Promise.resolve(true);
-    }
-    this.resourceService.findAll('schoolyears/').subscribe({
-      next: success,
-      error: error,
-      complete: complete
-    });
-  }
-
   async fetchData() {
     await this.spinnerService.show(this.studentTableSpinner.name);
-    await this.getSchoolYear();
   }
 
 }

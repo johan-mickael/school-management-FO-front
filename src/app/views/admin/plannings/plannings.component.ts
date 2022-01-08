@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { CalendarOptions } from '@fullcalendar/angular';
-import frLocale from '@fullcalendar/core/locales/fr';
-import { ResourceService } from '../../../services/resource.service';
-import { Subclass, PlanningCalendar } from '../../../services/interfaces';
-import { NgxSpinnerService } from "ngx-spinner";
-import { ErrorService } from '../../../services/error.service';
-import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit, SimpleChanges } from '@angular/core'
+import { CalendarOptions } from '@fullcalendar/angular'
+import frLocale from '@fullcalendar/core/locales/fr'
+import { ResourceService } from '../../../services/resource.service'
+import { Subclass, PlanningCalendar } from '../../../services/interfaces'
+import { NgxSpinnerService } from "ngx-spinner"
+import { ErrorService } from '../../../services/error.service'
+import { Subscription } from 'rxjs'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-plannings',
@@ -24,13 +24,13 @@ export class PlanningsComponent implements OnInit, OnDestroy {
   readonly spinner = {
     name: "planning-spinner",
     type: "ball-grid-pulse"
-  };
-  readonly resources: string[] = ['plannings/', 'subclasses/', 'plannings/filter/'];
-  readonly facetofaceColor = '#493fb5';
-  readonly remoteColor = '#f35304';
+  }
+  readonly resources: string[] = ['plannings/', 'subclasses/', 'plannings/filter/']
+  readonly facetofaceColor = '#493fb5'
+  readonly remoteColor = '#f35304'
 
-  selectedClass: number = 0;
-  classes: Subclass[] = [
+  selectedClass: number = 0
+  subclasses: Subclass[] = [
     {
       id: 0,
       name: 'Toutes les classes',
@@ -38,7 +38,7 @@ export class PlanningsComponent implements OnInit, OnDestroy {
       description: '',
       class_name: '',
       class_description: ''
-    }];
+    }]
 
   headerToolbarForAllClasses: {} = {
     left: 'prev,next today',
@@ -77,95 +77,70 @@ export class PlanningsComponent implements OnInit, OnDestroy {
     eventClick: (el) => this.router.navigate(['plannings', el.event.extendedProps['planningId']])
   }
 
-  message: string = '';
-  subscription: Subscription = new Subscription;
-  dataLoaded: Promise<boolean>;
+  message: string = ''
+  subscription: Subscription = new Subscription
+  dataLoaded: Promise<boolean>
 
   ngOnInit(): void {
-    this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
-    this.fetchData();
+    this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message)
+    this.fetchApiData()
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscription.unsubscribe()
   }
 
   async onClassChange() {
-    await this.spinnerService.show(this.spinner.name);
-    const success = async (data: any) => {
-      this.setCalendarEvents(data);
+    await this.spinnerService.show(this.spinner.name)
+    try {
+      const res = await Promise.resolve(
+        this.resourceService.getPromise(this.resourceService.findOne(this.resources[2], this.selectedClass))
+      ) as PlanningCalendar[]
+      this.setCalendarEvents(res)
       if (this.selectedClass != 0) {
-        this.calendarOptions.initialView = 'dayGridMonth';
+        this.calendarOptions.initialView = 'dayGridMonth'
         this.calendarOptions.headerToolbar = this.headerToolbarForOneClass
       } else {
-        this.calendarOptions.initialView = 'dayGridWeek';
+        this.calendarOptions.initialView = 'dayGridWeek'
         this.calendarOptions.headerToolbar = this.headerToolbarForAllClasses
       }
+      this.spinnerService.hide(this.spinner.name)
+    } catch (error) {
+      this.errorService.handleError(error, this.spinner.name)
     }
-    const error = (error: any) => {
-      this.errorService.handleError(error, this.spinner.name);
-    }
-    const complete = async () => {
-      this.spinnerService.hide(this.spinner.name);
-    }
-    this.resourceService.findOne(this.resources[2], this.selectedClass).subscribe({
-      next: success,
-      error: error,
-      complete: complete
-    });
   }
 
-  async fetchData() {
-    await this.spinnerService.show(this.spinner.name);
-    var success = async (data: any) => {
-      this.setCalendarEvents(data);
+  async fetchApiData() {
+    this.spinnerService.show(this.spinner.name)
+    try {
+      const res = await Promise.all([
+        this.resourceService.getPromise(this.resourceService.findAll('plannings/')),
+        this.resourceService.getPromise(this.resourceService.findAll('subclasses/'))
+      ])
+      const data = await Promise.all(res)
+      this.setCalendarEvents(data[0])
+      this.subclasses = [this.subclasses[0], ...data[1] as Subclass[]]
+      this.dataLoaded = Promise.resolve(true)
+      this.spinnerService.hide(this.spinner.name)
+    } catch (error) {
+      this.errorService.handleError(error, this.spinner.name)
     }
-    var error = async (error: any) => {
-      this.errorService.handleError(error, this.spinner.name);
-    }
-    await this.resourceService.findAll(this.resources[0]).subscribe({
-      next: success,
-      error: error
-    })
-    success = async (data: any) => {
-      this.populateClassSelectInput(data);
-    }
-    error = async (error: any) => {
-      this.errorService.handleError(error, this.spinner.name);
-    }
-    const complete = async () => {
-      this.spinnerService.hide(this.spinner.name);
-      this.dataLoaded = Promise.resolve(true);
-    }
-    await this.resourceService.findAll(this.resources[1]).subscribe({
-      next: success,
-      error: error,
-      complete: complete
-    })
   }
 
   setCalendarEvents(data: any) {
-    const plannings = data as PlanningCalendar[];
-    var i = 0;
+    const plannings = data as PlanningCalendar[]
+    var i = 0
     plannings.forEach((item) => {
-      plannings[i].className = "event-hover";
+      plannings[i].className = "event-hover"
       if (item.isRemote) {
-        plannings[i].backgroundColor = this.remoteColor;
-        plannings[i].borderColor = this.remoteColor;
+        plannings[i].backgroundColor = this.remoteColor
+        plannings[i].borderColor = this.remoteColor
       } else {
-        plannings[i].backgroundColor = this.facetofaceColor;
-        plannings[i].borderColor = this.facetofaceColor;
+        plannings[i].backgroundColor = this.facetofaceColor
+        plannings[i].borderColor = this.facetofaceColor
       }
-      i++;
-    });
-    this.calendarOptions.events = plannings;
+      i++
+    })
+    this.calendarOptions.events = plannings
   }
-
-  populateClassSelectInput(data: any) {
-    const classes = data as Subclass[];
-    classes.forEach((_class) => {
-      this.classes.push(_class);
-    });
-  }
-
 }

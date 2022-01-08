@@ -58,71 +58,52 @@ export class PointingComponent implements OnInit {
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
     this.spinnerService.show(this.spinner.name);
-    this.fetchData();
+    this.fetchApiData();
   }
 
   async savePresences() {
-    await this.spinnerService.show(this.spinner.name);
-    const success = async (data: any) => {
-      await this.spinnerService.hide(this.spinner.name);
-    }
-    const error = async (error: any) => {
+    try {
+      await this.spinnerService.show(this.spinner.name);
+      const res = await Promise.resolve(
+        this.resourceService.getPromise(this.resourceService.postData('presences/save', this.presenceForm.value))
+      )
+      this.fetchApiData()
+    } catch (error) {
       await this.errorService.handleError(error, this.spinner.name);
     }
-    const complete = async () => {
-      await this.fetchData()
-    }
-    this.resourceService.postData('presences/save', this.presenceForm.value).subscribe({
-      next: success,
-      error: error,
-      complete: complete
-    });
   }
 
   async endPlanning() {
     if (confirm('Voulez-vous vraiment terminer le cours ?')) {
-      await this.spinnerService.show(this.spinner.name);
-      const success = async (data: any) => {
-        await this.spinnerService.hide(this.spinner.name);
-      }
-      const error = async (error: any) => {
+      try {
+        await this.spinnerService.show(this.spinner.name);
+        const res = await Promise.resolve(
+          this.resourceService.getPromise(this.resourceService.postData('presences/terminate', this.presenceForm.value))
+        )
+        this.fetchApiData()
+      } catch (error) {
         await this.errorService.handleError(error, this.spinner.name);
       }
-      const complete = async () => {
-        await this.fetchData()
-      }
-      this.resourceService.postData('presences/terminate', this.presenceForm.value).subscribe({
-        next: success,
-        error: error,
-        complete: complete
-      });
     }
-
   }
 
-  async fetchData() {
+  async fetchApiData() {
     const planningId = this.activatedRoute.snapshot.params['id'];
     this.presences.clear();
-    const success = async (data: any) => {
-      this.data = data;
-      this.planning = this.data.planning as Planning;
-      this.students = this.data.students;
-      this.presencesData = this.data.presences;
+    try {
+      const res = await Promise.resolve(
+        this.resourceService.getPromise(this.resourceService.findOne('presences/', planningId))
+      )
+      this.planning = res.planning as Planning;
+      this.students = res.students;
+      this.presencesData = res.presences;
       this.done = (this.planning.status == 2) ? true : false;
       await this.generateRow(this.students, this.presencesData)
-    }
-    const error = async (error: any) => {
+      this.dataLoaded = Promise.resolve(true);
+      this.spinnerService.hide(this.spinner.name);
+    } catch (error) {
       await this.errorService.handleError(error, this.spinner.name);
     }
-    const complete = async () => {
-      this.dataLoaded = Promise.resolve(true);
-      await this.spinnerService.hide(this.spinner.name);
-    }
-    this.resourceService.findOne('presences/', planningId).subscribe({
-      next: success,
-      error: error,
-      complete: complete
-    });
   }
 
   get presences() {

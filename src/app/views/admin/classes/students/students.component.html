@@ -1,13 +1,7 @@
-<div *ngIf="dataLoaded | async" class="position-relative">
+<!-- <div *ngIf="dataLoaded | async" class="position-relative">
   <ngx-spinner [fullScreen]="false" name="{{studentTableSpinner.name}}" bdColor="rgba(255, 255, 255, .8)" size="default"
     color="#343a40" type="{{studentTableSpinner.type}}">En attente du serveur ...</ngx-spinner>
-  <div class="form mb-3">
-    <label class="form-label">Année scolaire</label>
-    <select class="form-control" id="allocation-algorithm" [(ngModel)]="selectedSchoolYearId"
-      (change)="onSchoolYearChange()">
-      <option *ngFor="let schoolYear of schoolYears" [value]="schoolYear.id">{{schoolYear.description}}</option>
-    </select>
-  </div>
+
   <div id="table" class="p-4">
     <table class="table table-hover text-nowrap">
       <thead>
@@ -26,4 +20,6 @@
       </tbody>
     </table>
   </div>
-</div>
+</div> -->
+{{subclassId}}
+{{schoolYearId}}

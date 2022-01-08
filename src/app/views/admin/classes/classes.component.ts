@@ -1,9 +1,9 @@
 import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { ResourceService } from '../../../services/resource.service';
 import { ErrorService } from '../../../services/error.service';
-import { Subclass, Class } from '../../../services/interfaces';
+import { Subclass, Class, SchoolYear } from '../../../services/interfaces';
 
 @Component({
   selector: 'app-classes',
@@ -22,7 +22,6 @@ export class ClassesComponent implements OnInit {
     name: "class-spinner",
     type: "square-jelly-box"
   };
-  readonly resources: string[] = ['subclasses/', 'classes/'];
 
   selectedClass: number = 0;
   classes: Class[] = [
@@ -33,74 +32,48 @@ export class ClassesComponent implements OnInit {
     }
   ];
   subclasses: Subclass[] = [];
+  selectedSchoolYearId: number;
+  schoolYears: SchoolYear[];
   message: string = '';
   subscription: Subscription = new Subscription;
   dataLoaded: Promise<boolean>;
-
   selectedSubclassId: number;
 
-  ngOnInit(): void {
-    this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
-    this.fetchData();
+  async ngOnInit() {
+    this.fetchApiData()
   }
 
   setSelectedSubclassesId(id: number) {
     this.selectedSubclassId = id;
   }
 
-  async fetchData() {
+  async fetchApiData() {
     await this.spinnerService.show(this.spinner.name);
-    var success = async (data: any) => {
-      this.subclasses = data as Subclass[]
-      this.setSelectedSubclassesId(this.subclasses[0].id);
+    try {
+      const res = await Promise.all([
+        this.resourceService.getPromise(this.resourceService.findAll('classes/')),
+        this.resourceService.getPromise(this.resourceService.findAll('subclasses/')),
+        this.resourceService.getPromise(this.resourceService.findAll('schoolyears/'))
+      ])
+      const data = await Promise.all(res)
+      this.classes = [this.classes[0], ...data[0] as Class[]]
+      this.subclasses = data[1] as Subclass[]
+      this.schoolYears = data[2] as SchoolYear[]
+      this.selectedSchoolYearId = this.schoolYears[0].id
+      this.dataLoaded = Promise.resolve(true)
+      await this.spinnerService.hide(this.spinner.name)
+    } catch (error) {
+      this.errorService.handleError(error, this.spinner.name)
     }
-    var error = async (error: any) => {
-      this.errorService.handleError(error, this.spinner.name);
-    }
-    await this.resourceService.findAll(this.resources[0]).subscribe({
-      next: success,
-      error: error
-    });
-    success = async (data: any) => {
-      this.populateClassSelectInput(data);
-    }
-    error = async (error: any) => {
-      this.errorService.handleError(error, this.spinner.name);
-    }
-    const complete = async () => {
-      this.spinnerService.hide(this.spinner.name);
-      this.dataLoaded = Promise.resolve(true);
-    }
-    await this.resourceService.findAll(this.resources[1]).subscribe({
-      next: success,
-      error: error,
-      complete: complete
-    });
   }
 
   async onClassChange() {
-    await this.spinnerService.show(this.spinner.name);
-    const success = async (data: any) => {
-      this.subclasses = data as Subclass[]
-      this.selectedSubclassId = this.subclasses[0].id;
+    await this.spinnerService.show(this.spinner.name)
+    try {
+      this.subclasses = await this.resourceService.getPromise(this.resourceService.findOne('subclasses/', this.selectedClass)) as Subclass[]
+      this.spinnerService.hide(this.spinner.name)
+    } catch (error) {
+      this.errorService.handleError(error, this.spinner.name)
     }
-    const error = async (error: any) => {
-      this.errorService.handleError(error, this.spinner.name);
-    }
-    const complete = async () => {
-      this.spinnerService.hide(this.spinner.name);
-    }
-    this.resourceService.findOne(this.resources[0], this.selectedClass).subscribe({
-      next: success,
-      error: error,
-      complete: complete
-    });
-  }
-
-  populateClassSelectInput(data: any) {
-    const classes = data as Class[];
-    classes.forEach((_class) => {
-      this.classes.push(_class);
-    });
   }
 }

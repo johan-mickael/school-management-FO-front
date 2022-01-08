@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,14 @@ export class ResourceService {
 
   postData(resource: string, input: any) {
     return this.httpClient.post(this.url + resource, JSON.stringify(input), this.options)
+  }
+
+  getPromise(observable: Observable<object>) {
+    return new Promise<any>((resolve, reject) => {
+      observable.subscribe(
+        (data) => resolve(data),
+        (error) => reject(error)
+      );
+    })
   }
 }
