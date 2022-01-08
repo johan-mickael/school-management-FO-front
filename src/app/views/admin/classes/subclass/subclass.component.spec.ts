@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubclassesComponent } from './subclasses.component';
+import { SubclassComponent } from './subclass.component';
 
-describe('SubclassesComponent', () => {
-  let component: SubclassesComponent;
-  let fixture: ComponentFixture<SubclassesComponent>;
+describe('SubclassComponent', () => {
+  let component: SubclassComponent;
+  let fixture: ComponentFixture<SubclassComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubclassesComponent ]
+      declarations: [ SubclassComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubclassesComponent);
+    fixture = TestBed.createComponent(SubclassComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
