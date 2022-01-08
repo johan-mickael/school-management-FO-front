@@ -1,0 +1,8 @@
+.class-box {
+  cursor: pointer;
+  background-color: rgb(236, 236, 236);
+}
+
+.class-box-selected {
+  background-color: rgb(255, 255, 255);
+}

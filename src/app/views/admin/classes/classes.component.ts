@@ -32,8 +32,6 @@ export class ClassesComponent implements OnInit {
     }
   ];
   subclasses: Subclass[] = [];
-  selectedSchoolYearId: number;
-  schoolYears: SchoolYear[];
   message: string = '';
   subscription: Subscription = new Subscription;
   dataLoaded: Promise<boolean>;
@@ -43,25 +41,19 @@ export class ClassesComponent implements OnInit {
     this.fetchApiData()
   }
 
-  setSelectedSubclassesId(id: number) {
-    this.selectedSubclassId = id;
-  }
-
   async fetchApiData() {
     await this.spinnerService.show(this.spinner.name);
     try {
       const res = await Promise.all([
         this.resourceService.getPromise(this.resourceService.findAll('classes/')),
-        this.resourceService.getPromise(this.resourceService.findAll('subclasses/')),
-        this.resourceService.getPromise(this.resourceService.findAll('schoolyears/'))
+        this.resourceService.getPromise(this.resourceService.findAll('subclasses/'))
       ])
       const data = await Promise.all(res)
       this.classes = [this.classes[0], ...data[0] as Class[]]
       this.subclasses = data[1] as Subclass[]
-      this.schoolYears = data[2] as SchoolYear[]
-      this.selectedSchoolYearId = this.schoolYears[0].id
+      this.selectedSubclassId = this.subclasses[0].id
       this.dataLoaded = Promise.resolve(true)
-      await this.spinnerService.hide(this.spinner.name)
+      await this.spinnerService.hide('class-spinner');
     } catch (error) {
       this.errorService.handleError(error, this.spinner.name)
     }

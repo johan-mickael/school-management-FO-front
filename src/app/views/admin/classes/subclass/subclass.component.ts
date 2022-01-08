@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Subclass } from '../../../../services/interfaces';
 
 @Component({
@@ -11,6 +11,7 @@ export class SubclassComponent implements OnInit {
   constructor() { }
 
   @Input() subclass: Subclass;
+  @Input() selected: boolean;
 
   ngOnInit(): void {
   }

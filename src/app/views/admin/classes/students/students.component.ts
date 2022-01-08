@@ -21,15 +21,10 @@ export class StudentsComponent implements OnInit, OnChanges {
   ) { }
 
   @Input() subclassId: number;
-  @Input() schoolYearId: number;
+  schoolYearId: number;
   schoolYears: SchoolYear[];
   students: Student[];
   dataLoaded: Promise<boolean>;
-  readonly classSpinner: string = 'classSpinner'
-  readonly studentTableSpinner = {
-    name: 'studentTableSpinner',
-    type: 'triangle-skew-spin'
-  }
 
   dtOptions = {
     pagingType: 'full_numbers',
@@ -37,50 +32,48 @@ export class StudentsComponent implements OnInit, OnChanges {
     autoWidth: true
   }
 
-  getRouteParams() {
-    this.subclassId = this.activatedRoute.snapshot.params['subclassId'];
-    this.schoolYearId = this.activatedRoute.snapshot.params['schoolYearId'];
-  }
 
   async ngOnInit() {
-    this.getRouteParams();
-    this.router.events.subscribe(event => {
-      if (event.constructor.name === 'NavigationStart') {
-        this.getRouteParams();
-      }
-    });
-    await this.fetchData();
-    await this.spinnerService.hide(this.studentTableSpinner.name);
+    await this.fetchApiData();
     this.dataLoaded = Promise.resolve(true);
   }
 
   async ngOnChanges(changes: SimpleChanges) {
-    await this.spinnerService.show(this.studentTableSpinner.name);
-    await this.getStudents();
-    await this.spinnerService.hide(this.studentTableSpinner.name);
+    this.getStudents()
   }
 
   async onSchoolYearChange() {
-    await this.spinnerService.show(this.studentTableSpinner.name);
-    await this.getStudents();
-    await this.spinnerService.hide(this.studentTableSpinner.name);
+    this.getStudents()
   }
 
   async getStudents() {
-    const success = async (data: any) => {
-      this.students = data as Student[];
+    await this.spinnerService.show('student-spinner');
+    try {
+      const data = await Promise.resolve(
+        this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.schoolYearId + '/'))
+      )
+      this.students = data as Student[]
+      await this.spinnerService.hide('student-spinner');
+    } catch (error) {
+      this.errorService.handleError(error, 'student-spinner');
     }
-    const error = async (error: any) => {
-      this.errorService.handleError(error, this.classSpinner);
-    }
-    this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.schoolYearId + '/').subscribe({
-      next: success,
-      error: error
-    });
   }
 
-  async fetchData() {
-    await this.spinnerService.show(this.studentTableSpinner.name);
+  async fetchApiData() {
+    try {
+      const res = await Promise.all([
+        this.resourceService.getPromise(this.resourceService.findAll('schoolyears/')),
+        this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.schoolYearId + '/'))
+      ])
+      const data = await Promise.all(res);
+      this.schoolYears = data[0] as SchoolYear[]
+      this.schoolYearId = this.schoolYears[0].id
+      this.students = data[1] as Student[]
+      this.dataLoaded = Promise.resolve(true)
+      await this.spinnerService.hide('student-spinner');
+    } catch (error) {
+      this.errorService.handleError(error, 'student-spinner');
+    }
   }
 
 }

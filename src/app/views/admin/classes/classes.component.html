@@ -1,6 +1,8 @@
 <div class="p-3 position-relative min-vh-100">
-  <ngx-spinner [fullScreen]="false" name="{{spinner.name}}" bdColor="rgba(255, 255, 255, .5)" size="medium"
-    color="#343a40" type="{{spinner.type}}"></ngx-spinner>
+  <ngx-spinner [fullScreen]="false" name="{{spinner.name}}" bdColor="rgba(255, 255, 255, .8)" size="medium"
+    color="#343a40" type="{{spinner.type}}">Chargement des classes ...</ngx-spinner>
+  <ngx-spinner [fullScreen]="false" name="student-spinner" bdColor="rgba(255, 255, 255, .8)" size="medium"
+    color="#343a40" type="ball-clip-rotate-multiple">Chargement des étudiants ...</ngx-spinner>
   <div *ngIf="dataLoaded | async">
     <div class="form mb-3">
       <label class="form-label">Choisir les classes</label>
@@ -10,17 +12,12 @@
       </select>
     </div>
     <div class="row">
-      <app-subclass class="col-md-3 col-sm-4 col-12" *ngFor="let subclass of subclasses" [subclass]="subclass">
+      <app-subclass (click)="selectedSubclassId = subclass.id" class="col-md-3 col-sm-4 col-12"
+        *ngFor="let subclass of subclasses" [subclass]="subclass" [selected]="selectedSubclassId === subclass.id">
       </app-subclass>
     </div>
-    <div class="form mb-3">
-      <label class="form-label">Année scolaire</label>
-      <select class="form-control" id="allocation-algorithm" [(ngModel)]="selectedSchoolYearId">
-        <option *ngFor="let schoolYear of schoolYears" [value]="schoolYear.id">{{schoolYear.description}}</option>
-      </select>
-    </div>
     <div id="students">
-      <app-students></app-students>
+      <app-students [subclassId]="selectedSubclassId"></app-students>
     </div>
   </div>
 

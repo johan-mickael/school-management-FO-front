@@ -25,8 +25,6 @@ import { ConcatPipe } from './pipe/ConcatPipe';
 import { StudentsComponent } from './views/admin/classes/students/students.component';
 import { SubclassComponent } from './views/admin/classes/subclass/subclass.component';
 
-// test
-
 registerLocaleData(localeFr, 'fr');
 
 FullCalendarModule.registerPlugins([
