@@ -57,7 +57,7 @@
               <tr *ngFor="let student of students; let index = index"
                 style="background-color: white;  page-break-inside:avoid; page-break-after:auto;"
                 formGroupName="{{index}}">
-                <input type="hidden" formControlName="student_id" [(ngModel)]="student.id" />
+                <input type="hidden" formControlName="student_id" [(ngModel)]="student.student_id" />
                 <input type="hidden" formControlName="planning_id" [(ngModel)]="planning.id" />
                 <td class="text-capitalize"><a href="">{{ [student.first_name, student.last_name] | concatPipe }}</a>
                 </td>

@@ -24,11 +24,7 @@ export class ResourceService {
     return this.httpClient.get(this.url + resource + id)
   }
 
-  savePresence(input: any) {
-    return this.httpClient.post(this.url + 'presences/save', JSON.stringify(input), this.options)
-  }
-
-  endPlanning(input: any) {
-    return this.httpClient.post(this.url + 'presences/terminate', JSON.stringify(input), this.options)
+  postData(resource: string, input: any) {
+    return this.httpClient.post(this.url + resource, JSON.stringify(input), this.options)
   }
 }

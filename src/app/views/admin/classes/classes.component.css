@@ -1,6 +1,10 @@
 .class-box {
-    cursor: pointer;
+  cursor: pointer;
 }
 .class-box:hover {
-    background-color: rgb(247, 247, 247);
+  background-color: rgb(247, 247, 247);
+}
+
+.class-box-selected {
+  background-color: red;
 }

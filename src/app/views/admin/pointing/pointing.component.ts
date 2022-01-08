@@ -50,7 +50,7 @@ export class PointingComponent implements OnInit {
   data: any;
   presencesData: any;
   planning: Planning;
-  students: Student[];
+  students: any;
   size: number;
   dataLoaded: Promise<boolean>;
   done: boolean | string;
@@ -72,7 +72,7 @@ export class PointingComponent implements OnInit {
     const complete = async () => {
       await this.fetchData()
     }
-    this.resourceService.savePresence(this.presenceForm.value).subscribe({
+    this.resourceService.postData('presences/save', this.presenceForm.value).subscribe({
       next: success,
       error: error,
       complete: complete
@@ -91,7 +91,7 @@ export class PointingComponent implements OnInit {
       const complete = async () => {
         await this.fetchData()
       }
-      this.resourceService.endPlanning(this.presenceForm.value).subscribe({
+      this.resourceService.postData('presences/terminate', this.presenceForm.value).subscribe({
         next: success,
         error: error,
         complete: complete
@@ -106,12 +106,10 @@ export class PointingComponent implements OnInit {
     const success = async (data: any) => {
       this.data = data;
       this.planning = this.data.planning as Planning;
-      this.students = this.data.students as Student[];
+      this.students = this.data.students;
       this.presencesData = this.data.presences;
       this.done = (this.planning.status == 2) ? true : false;
-      console.log(this.done)
       await this.generateRow(this.students, this.presencesData)
-
     }
     const error = async (error: any) => {
       await this.errorService.handleError(error, this.spinner.name);
@@ -154,11 +152,11 @@ export class PointingComponent implements OnInit {
     }
   }
 
-  newRow(student: Student, presence: any) {
+  newRow(student: any, presence: any) {
     if (presence === undefined) {
       var formGroup = {
         planning_id: this.planning.id,
-        student_id: student.id,
+        student_id: student.student_id,
         is_present_class: false,
         is_present: false,
         is_late: false,
@@ -167,7 +165,7 @@ export class PointingComponent implements OnInit {
     } else {
       formGroup = {
         planning_id: this.planning.id,
-        student_id: student.id,
+        student_id: student.student_id,
         is_present_class: presence.is_present_class,
         is_present: presence.is_present,
         is_late: presence.is_late,
@@ -177,10 +175,11 @@ export class PointingComponent implements OnInit {
     return this.formBuilder.group(formGroup)
   }
 
-  generateRow(students: Student[], presences: any) {
-    for (let i = 0; i < students.length; i++) {
-      this.presences.push(this.newRow(students[i], presences[i]));
-    }
+  generateRow(students: any[], presences: any) {
+    students.map((student, index) => {
+      this.presences.push(this.newRow(student, presences[index]));
+    })
+    console.log(this.presenceForm.value)
   }
 
   makePDF() {

@@ -37,15 +37,22 @@ export class ClassesComponent implements OnInit {
   subscription: Subscription = new Subscription;
   dataLoaded: Promise<boolean>;
 
+  selectedSubclassId: number;
+
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
     this.fetchData();
+  }
+
+  setSelectedSubclassesId(id: number) {
+    this.selectedSubclassId = id;
   }
 
   async fetchData() {
     await this.spinnerService.show(this.spinner.name);
     var success = async (data: any) => {
       this.subclasses = data as Subclass[]
+      this.setSelectedSubclassesId(this.subclasses[0].id);
     }
     var error = async (error: any) => {
       this.errorService.handleError(error, this.spinner.name);
@@ -75,6 +82,7 @@ export class ClassesComponent implements OnInit {
     await this.spinnerService.show(this.spinner.name);
     const success = async (data: any) => {
       this.subclasses = data as Subclass[]
+      this.selectedSubclassId = this.subclasses[0].id;
     }
     const error = async (error: any) => {
       this.errorService.handleError(error, this.spinner.name);

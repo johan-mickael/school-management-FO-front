@@ -14,14 +14,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./plannings.component.css']
 })
 export class PlanningsComponent implements OnInit, OnDestroy {
-
   constructor(
     private resourceService: ResourceService,
     private spinnerService: NgxSpinnerService,
     private errorService: ErrorService,
     private router: Router
   ) { }
-
 
   readonly spinner = {
     name: "planning-spinner",
