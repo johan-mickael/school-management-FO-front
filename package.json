@@ -27,7 +27,6 @@
     "@fullcalendar/scrollgrid": "^5.10.1",
     "@fullcalendar/timegrid": "^5.10.1",
     "@ng-bootstrap/ng-bootstrap": "^11.0.0",
-    "@types/html2canvas": "^1.0.0",
     "@types/jspdf": "^2.0.0",
     "admin-lte": "^3.1.0",
     "html2canvas": "^1.4.0",

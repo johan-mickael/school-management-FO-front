@@ -107,7 +107,7 @@
           </table>
         </div>
       </div>
-      <div *ngIf="students.length !== 0" style="display: flex;justify-content: center;">
+      <div *ngIf="students.length !== 0" id="btn-group">
         <div class="btn-group" role="group" aria-label="Basic example">
           <a *ngIf="planning.status > 0" (click)="openPDF()" class="mb-3 btn btn-mat btn-primary" sty="">Imprimer la
             fiche</a>

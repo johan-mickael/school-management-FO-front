@@ -1,5 +1,5 @@
 .card-header {
-  background-color: #1f2f3ee0;
+  background-color: #242d36e0;
   color: white;
 }
 
@@ -25,4 +25,9 @@ table td {
 .form-control:disabled, .form-control[readonly] {
   background-color: white;
   opacity: .7;
+}
+
+#btn-group {
+  display: flex;
+  justify-content: end;
 }
