@@ -23,7 +23,7 @@ export class PointingComponent implements OnInit {
     private errorService: ErrorService,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) { }
 
   presenceForm = this.formBuilder.group({
