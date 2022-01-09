@@ -6,7 +6,7 @@
         <option *ngFor="let schoolYear of schoolYears" [value]="schoolYear.id">{{schoolYear.description}}</option>
       </select>
     </div>
-    <div class="card">
+    <div *ngIf="students.length > 0; else noStudentAlert" class="card">
       <div class="card-header border-0">
         <h3 class="card-title">Liste des étudiants</h3>
         <div class="card-tools">
@@ -31,7 +31,7 @@
           <tbody>
             <tr *ngFor="let student of students">
               <td>
-                <img src="assets/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                <img src="assets/img/user.jpg" alt="Product 1" class="img-circle img-size-32 mr-2">
               </td>
               <td>{{student.first_name}}</td>
               <td>
@@ -47,9 +47,12 @@
       </div>
 
     </div>
-    <div *ngIf="students.length === 0" class="alert alert-warning text-center">
-      Il n'y a aucun étudiant dans cette classe.
-    </div>
+    <ng-template #noStudentAlert>
+      <div class="alert alert-warning text-center" role="alert">
+        <i class="fas fa-exclamation-circle"></i>
+        <b> Aucun étudiant dans cette classe.</b>
+      </div>
+    </ng-template>
   </div>
 
 </div>

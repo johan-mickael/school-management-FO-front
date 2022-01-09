@@ -24,42 +24,48 @@ import localeFr from '@angular/common/locales/fr';
 import { ConcatPipe } from './pipe/ConcatPipe';
 import { StudentsComponent } from './views/admin/classes/students/students.component';
 import { SubclassComponent } from './views/admin/classes/subclass/subclass.component';
+import { ToastrModule } from 'ngx-toastr';
 
 registerLocaleData(localeFr, 'fr');
 
 FullCalendarModule.registerPlugins([
-	dayGridPlugin,
-	interactionPlugin,
-	listPlugin,
-	timeGridPlugin
+  dayGridPlugin,
+  interactionPlugin,
+  listPlugin,
+  timeGridPlugin
 ]);
 
 @NgModule({
-	declarations: [
-		AppComponent,
-		NavComponent,
-		SideComponent,
-		PlanningsComponent,
-		ClassesComponent,
-		ErrorpageComponent,
-		PointingComponent,
+  declarations: [
+    AppComponent,
+    NavComponent,
+    SideComponent,
+    PlanningsComponent,
+    ClassesComponent,
+    ErrorpageComponent,
+    PointingComponent,
     ConcatPipe,
     StudentsComponent,
     SubclassComponent
-	],
-	imports: [
-		BrowserModule,
-		BrowserAnimationsModule,
-		AppRoutingModule,
-		HttpClientModule,
-		RouterModule,
-		FullCalendarModule,
-		ReactiveFormsModule,
+  ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    HttpClientModule,
+    RouterModule,
+    FullCalendarModule,
+    ReactiveFormsModule,
     FormsModule,
-		NgxSpinnerModule
-	],
-	providers: [ErrorService],
-	bootstrap: [AppComponent],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    NgxSpinnerModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      preventDuplicates: true,
+      closeButton: true,
+    })
+  ],
+  providers: [ErrorService],
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

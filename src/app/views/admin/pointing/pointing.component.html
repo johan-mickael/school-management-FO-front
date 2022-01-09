@@ -15,16 +15,18 @@
       <div class="col-sm-6">
       </div>
     </div>
-    <form action="" method="POST" [formGroup]="presenceForm">
+    <form action="" method="POST" [formGroup]="presenceForm" *ngIf="students.length !== 0; else noStudentAlert">
       <input type="hidden" name="_token" value="ilQzY07iiLWigwyNt5H3Hom29MVQlq9XPzeNjG7b">
       <div class="card">
-        <div class="card-header" style="background-color: #343a40de; color: white;">
-          <h3 class="card-title text-bold">Fiche de présence de la classe {{planning.subclass_name}}</h3>
-          <span class="{{status[planning.status].class}} float-right" style="font-size:1rem">{{
-            status[planning.status].text }}</span>
+        <div class="card-header">
+          <h3 class="card-title">Fiche de présence de la classe {{planning.subclass_name}}</h3>
+          <span class="{{status[planning.status].class}} float-right status">
+            {{ status[planning.status].text }}
+            <i class="{{status[planning.status].icon}}"></i>
+          </span>
         </div>
 
-        <div class="card-body table-responsive table-bordered p-0" id="presence" formArrayName="presences">
+        <div class="card-body table-responsive p-0 overflow-hidden" id="presence" formArrayName="presences">
           <table class="table text-nowrap" style="page-break-inside:always;">
             <tbody>
               <tr style="background-color: aliceblue;">
@@ -47,61 +49,58 @@
                 </th>
               </tr>
               <tr></tr>
-              <tr style="background: rgb(248, 248, 237);">
-                <th>Nom et prénoms</th>
-                <th class="text-center">En salle</th>
-                <th class="text-center">Présent</th>
-                <th class="text-center">En Retard</th>
-                <th class="text-right">Commentaires</th>
-              </tr>
-              <tr *ngFor="let student of students; let index = index"
-                style="background-color: white;  page-break-inside:avoid; page-break-after:auto;"
-                formGroupName="{{index}}">
-                <input type="hidden" formControlName="student_id" [(ngModel)]="student.student_id" />
-                <input type="hidden" formControlName="planning_id" [(ngModel)]="planning.id" />
-                <td class="text-capitalize"><a href="">{{ [student.first_name, student.last_name] | concatPipe }}</a>
-                </td>
-                <td class="text-center">
-                  <div class="icheck-success d-inline">
-                    <input type="checkbox" id="a{{index}}" formControlName="is_present_class" #checka
-                      [ngModel]="presenceForm.value.presences[index].is_present_class"
-                      (change)="onChangePresentClass(checkb, index, $event)" [attr.disabled]="done ? '' : null">
-                    <label for="a{{index}}">
-                    </label>
-                  </div>
-                </td>
-                <td class="text-center">
-                  <div class="icheck-primary d-inline">
-                    <input type="checkbox" id="b{{index}}" formControlName="is_present" #checkb
-                      [ngModel]="presenceForm.value.presences[index].is_present"
-                      (change)="onChangePresent(checka, checkc, index, $event)" [attr.disabled]="done ? '' : null">
-                    <label for="b{{index}}">
-                    </label>
-                  </div>
-                </td>
-                <td class="text-center">
-                  <div class="icheck-danger d-inline">
-                    <input type="checkbox" id="c{{index}}" formControlName="is_late" #checkc
-                      [ngModel]="presenceForm.value.presences[index].is_late"
-                      (change)="onChangeLate(checkb, index, $event)" [attr.disabled]="done ? '' : null">
-                    <label for="c{{index}}">
-                    </label>
-                  </div>
-                </td>
-                <td style="padding: 0;">
-                  <textarea style="border: none;" class="form-control" rows="2" formControlName="comment"></textarea>
-                </td>
-              </tr>
+              <div style="display: contents;">
+                <tr style="background: rgb(248, 248, 237);">
+                  <th>Nom et prénoms</th>
+                  <th class="text-center">En salle</th>
+                  <th class="text-center">Présent</th>
+                  <th class="text-center">En Retard</th>
+                  <th class="text-right">Commentaires</th>
+                </tr>
+                <tr *ngFor="let student of students; let index = index"
+                  style="background-color: white;  page-break-inside:avoid; page-break-after:auto;"
+                  formGroupName="{{index}}">
+                  <input type="hidden" formControlName="student_id" [(ngModel)]="student.student_id" />
+                  <input type="hidden" formControlName="planning_id" [(ngModel)]="planning.id" />
+                  <td class="text-capitalize border"><a href="">{{ [student.first_name, student.last_name] | concatPipe
+                      }}</a>
+                  </td>
+                  <td class="text-center border">
+                    <div class="icheck-success d-inline">
+                      <input type="checkbox" id="a{{index}}" formControlName="is_present_class" #checka
+                        [ngModel]="presenceForm.value.presences[index].is_present_class"
+                        (change)="onChangePresentClass(checkb, index, $event)" [attr.disabled]="done ? '' : null">
+                      <label for="a{{index}}">
+                      </label>
+                    </div>
+                  </td>
+                  <td class="text-center border">
+                    <div class="icheck-primary d-inline">
+                      <input type="checkbox" id="b{{index}}" formControlName="is_present" #checkb
+                        [ngModel]="presenceForm.value.presences[index].is_present"
+                        (change)="onChangePresent(checka, checkc, index, $event)" [attr.disabled]="done ? '' : null">
+                      <label for="b{{index}}">
+                      </label>
+                    </div>
+                  </td>
+                  <td class="text-center border">
+                    <div class="icheck-danger d-inline">
+                      <input type="checkbox" id="c{{index}}" formControlName="is_late" #checkc
+                        [ngModel]="presenceForm.value.presences[index].is_late"
+                        (change)="onChangeLate(checkb, index, $event)" [attr.disabled]="done ? '' : null">
+                      <label for="c{{index}}">
+                      </label>
+                    </div>
+                  </td>
+                  <td class=" border" style="padding: 0;">
+                    <textarea style="border: none;" class="form-control" rows="2" formControlName="comment"></textarea>
+                  </td>
+                </tr>
+              </div>
             </tbody>
           </table>
-
         </div>
-
       </div>
-      <div *ngIf="students.length === 0" class="alert alert-warning text-center" role="alert">
-        Aucun élève n'est présent dans cette classe !
-      </div>
-
       <div *ngIf="students.length !== 0" style="display: flex;justify-content: center;">
         <div class="btn-group" role="group" aria-label="Basic example">
           <a *ngIf="planning.status > 0" (click)="makePDF()" class="mb-3 btn btn-mat btn-primary" sty="">Imprimer la
@@ -112,7 +111,12 @@
             le cours</a>
         </div>
       </div>
-
     </form>
+    <ng-template #noStudentAlert>
+      <div class="alert alert-warning text-center" role="alert">
+        <i class="fas fa-exclamation-circle"></i>
+        <b> Aucun étudiant dans cette classe.</b>
+      </div>
+    </ng-template>
   </div>
 </div>

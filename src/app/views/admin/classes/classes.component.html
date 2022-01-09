@@ -16,7 +16,7 @@
         *ngFor="let subclass of subclasses" [subclass]="subclass" [selected]="selectedSubclassId === subclass.id">
       </app-subclass>
     </div>
-    <div id="students">
+    <div id="students" >
       <app-students [subclassId]="selectedSubclassId"></app-students>
     </div>
   </div>

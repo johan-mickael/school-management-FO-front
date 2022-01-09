@@ -1,0 +1,10 @@
+.card-header {
+  background-color: #1f2f3ee0;
+  color: white;
+}
+
+.status {
+  font-size: 1rem;
+  text-transform: capitalize;
+  opacity: .85;
+}

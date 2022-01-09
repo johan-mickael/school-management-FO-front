@@ -3,11 +3,12 @@ import { ErrorService } from '../../../services/error.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ResourceService } from '../../../services/resource.service';
 import { Subscription } from 'rxjs';
-import { Planning, Student } from '../../../services/interfaces';
+import { Planning } from '../../../services/interfaces';
 // @ts-ignore
 import * as html2pdf from 'html2pdf.js';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormArray } from '@angular/forms';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-pointing',
@@ -22,6 +23,7 @@ export class PointingComponent implements OnInit {
     private errorService: ErrorService,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private toastService: ToastService
   ) { }
 
   presenceForm = this.formBuilder.group({
@@ -34,15 +36,18 @@ export class PointingComponent implements OnInit {
   readonly status = [
     {
       text: 'en cours',
-      class: 'badge badge-warning'
+      class: 'badge badge-warning',
+      icon: 'fas fa-spinner'
     },
     {
       text: 'enregistré',
-      class: 'badge badge-success'
+      class: 'badge badge-success',
+      icon: 'fas fa-save'
     },
     {
       text: 'terminé',
-      class: 'badge badge-danger'
+      class: 'badge badge-danger',
+      icon: 'fas fa-times'
     }
   ]
   message: string;
@@ -67,7 +72,8 @@ export class PointingComponent implements OnInit {
       const res = await Promise.resolve(
         this.resourceService.getPromise(this.resourceService.postData('presences/save', this.presenceForm.value))
       )
-      this.fetchApiData()
+      await this.fetchApiData()
+      this.toastService.show('Pointage étudiant', 'Présence enregistré avec succès.', 'success')
     } catch (error) {
       await this.errorService.handleError(error, this.spinner.name);
     }
@@ -80,7 +86,8 @@ export class PointingComponent implements OnInit {
         const res = await Promise.resolve(
           this.resourceService.getPromise(this.resourceService.postData('presences/terminate', this.presenceForm.value))
         )
-        this.fetchApiData()
+        await this.fetchApiData()
+        this.toastService.show('Pointage étudiant', 'Cours terminé avec succès.', 'info')
       } catch (error) {
         await this.errorService.handleError(error, this.spinner.name);
       }
@@ -163,11 +170,11 @@ export class PointingComponent implements OnInit {
     console.log(this.presenceForm.value)
   }
 
-  makePDF() {
+  async makePDF() {
     var element = document.getElementById('presence');
     const outputName = 'Presence_' + this.planning.subclass_name + '_' + this.planning.planning_date +
       '_' + this.planning.start + '-' + this.planning.end;
-    html2pdf()
+    await html2pdf()
       .from(element)
       .set({
         margin: [10, 5, 10, 5],
@@ -186,5 +193,6 @@ export class PointingComponent implements OnInit {
         }
       })
       .save(outputName);
+      this.toastService.show('Pointage étudiant', 'Fiche de présence téléchargé.', 'info')
   }
 }
