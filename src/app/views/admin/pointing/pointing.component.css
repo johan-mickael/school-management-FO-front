@@ -8,3 +8,8 @@
   text-transform: capitalize;
   opacity: .9;
 }
+
+#presence {
+  overflow-x: auto;
+  padding: 2px!important;
+}

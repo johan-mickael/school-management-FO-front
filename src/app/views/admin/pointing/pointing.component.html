@@ -19,23 +19,23 @@
       <input type="hidden" name="_token" value="ilQzY07iiLWigwyNt5H3Hom29MVQlq9XPzeNjG7b">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Fiche de présence de la classe {{planning.subclass_name}}</h3>
+          <h3 id="title" class="card-title">Fiche de présence de la classe {{planning.subclass_name}}</h3>
           <span class="{{status[planning.status].class}} float-right status">
             {{ status[planning.status].text }}
             <i class="{{status[planning.status].icon}}"></i>
           </span>
         </div>
 
-        <div class="card-body table-responsive p-0 overflow-hidden" id="presence" formArrayName="presences">
-          <table class="table text-nowrap" style="page-break-inside:always;">
+        <div class="card-body table-responsive p-0" id="presence" formArrayName="presences">
+          <table class="table border text-nowrap" style="page-break-inside:always;">
             <tbody>
-              <tr style="background-color: aliceblue;">
+              <tr id="planning-informations" style="background-color: aliceblue;">
                 <th class="text-right" rowspan="2" colspan="1">
-                  <h5 class="text-capitalize">{{planning.planning_date | date:'EEEE d MMMM y':
+                  <h5 id="planning-date" class="text-capitalize">{{planning.planning_date | date:'EEEE d MMMM y':
                     undefined:
                     'fr'}}</h5>
                   <p>
-                    <span>{{planning.planning_date + ' ' + planning.start | date: 'shortTime':
+                    <span id="planning-hour">{{planning.planning_date + ' ' + planning.start | date: 'shortTime':
                       undefined:
                       'fr'}} à {{planning.planning_date + ' ' + planning.end | date: 'shortTime':
                       undefined: 'fr'}}</span> -
@@ -43,13 +43,13 @@
                   </p>
                 </th>
                 <th class="text-right" rowspan="1" colspan="4">
-                  <h2 class="text-uppercase">{{planning.subject_description}} -
+                  <h2 id="course-name" class="text-uppercase">{{planning.subject_description}} -
                     {{planning.subject_name}}</h2>
-                  <h5 class="text-capitalize">{{planning.professor_name}}</h5>
+                  <h5 id="professor-name" class="text-capitalize">{{planning.professor_name}}</h5>
                 </th>
               </tr>
               <tr></tr>
-              <div style="display: contents;">
+              <div id="table-content" style="display: contents;">
                 <tr style="background: rgb(248, 248, 237);">
                   <th>Nom et prénoms</th>
                   <th class="text-center">En salle</th>
@@ -93,7 +93,7 @@
                     </div>
                   </td>
                   <td class=" border" style="padding: 0;">
-                    <textarea style="border: none;" class="form-control" rows="2" formControlName="comment"></textarea>
+                    <textarea style="border: none;" class="form-control" rows="2" formControlName="comment" [readonly]="done"></textarea>
                   </td>
                 </tr>
               </div>
@@ -103,7 +103,7 @@
       </div>
       <div *ngIf="students.length !== 0" style="display: flex;justify-content: center;">
         <div class="btn-group" role="group" aria-label="Basic example">
-          <a *ngIf="planning.status > 0" (click)="makePDF()" class="mb-3 btn btn-mat btn-primary" sty="">Imprimer la
+          <a *ngIf="planning.status > 0" (click)="openPDF()" class="mb-3 btn btn-mat btn-primary" sty="">Imprimer la
             fiche</a>
           <a *ngIf="planning.status !== 2" (click)="savePresences()" class="mb-3 btn btn-mat btn-success"
             sty="">Sauvegarder</a>

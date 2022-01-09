@@ -61,11 +61,10 @@ export class StudentsComponent implements OnInit, OnChanges {
 
   async fetchApiData() {
     try {
-      const res = await Promise.all([
+      const data = await Promise.all([
         this.resourceService.getPromise(this.resourceService.findAll('schoolyears/')),
         this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.schoolYearId + '/'))
       ])
-      const data = await Promise.all(res);
       this.schoolYears = data[0] as SchoolYear[]
       this.schoolYearId = this.schoolYears[0].id
       this.students = data[1] as Student[]

@@ -9,6 +9,9 @@ import * as html2pdf from 'html2pdf.js';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormArray } from '@angular/forms';
 import { ToastService } from '../../../services/toast.service';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-pointing',
@@ -24,6 +27,7 @@ export class PointingComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastService: ToastService,
+    private datePipe: DatePipe
   ) { }
 
   presenceForm = this.formBuilder.group({
@@ -59,11 +63,16 @@ export class PointingComponent implements OnInit {
   size: number;
   dataLoaded: Promise<boolean>;
   done: boolean | string;
+  title: string;
 
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
     this.spinnerService.show(this.spinner.name);
     this.fetchApiData();
+  }
+
+  innerHTML(selector: string) {
+    return $(selector).html() as string
   }
 
   async savePresences() {
@@ -193,6 +202,29 @@ export class PointingComponent implements OnInit {
         }
       })
       .save(outputName);
-      this.toastService.show('Pointage étudiant', 'Fiche de présence téléchargé.', 'info')
+    this.toastService.show('Pointage étudiant', 'Fiche de présence téléchargé.', 'info')
+  }
+
+  async openPDF() {
+    let PDF = new jsPDF('p', 'mm', 'a4')
+    const defaultFontSize = (PDF.getFontSize() / 2) + 5
+    var pageHeight = PDF.internal.pageSize.height || PDF.internal.pageSize.getHeight();
+    var pageWidth = PDF.internal.pageSize.width || PDF.internal.pageSize.getWidth();
+    const title = this.innerHTML("#title");
+    var planningDate = this.innerHTML("#planning-date") + ' - ' + this.innerHTML("#planning-hour")
+    planningDate = planningDate.charAt(0).toUpperCase() + planningDate.slice(1)
+    PDF.setFontSize(defaultFontSize + 6)
+    var x = pageWidth / 2
+    var y = 12
+    PDF.text(title, x, y, { align: 'center' })
+    PDF.setFontSize(defaultFontSize - 2)
+    y += 6
+    PDF.text(planningDate, x, y, { align: 'center' })
+    PDF.setFontSize(defaultFontSize - 2)
+    y += 6
+    var course = (this.innerHTML("#course-name") + ' - ' + this.innerHTML("#professor-name")).toUpperCase()
+    PDF.text(course, x, y, { align: 'center' })
+
+    PDF.save('demo.pdf')
   }
 }

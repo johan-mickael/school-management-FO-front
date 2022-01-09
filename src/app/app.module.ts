@@ -19,7 +19,7 @@ import { ErrorpageComponent } from './views/layouts/errorpage/errorpage.componen
 import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PointingComponent } from './views/admin/pointing/pointing.component';
-import { registerLocaleData } from '@angular/common';
+import { registerLocaleData, DatePipe } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { ConcatPipe } from './pipe/ConcatPipe';
 import { StudentsComponent } from './views/admin/classes/students/students.component';
@@ -64,7 +64,7 @@ FullCalendarModule.registerPlugins([
       closeButton: true,
     })
   ],
-  providers: [ErrorService],
+  providers: [ErrorService, DatePipe],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

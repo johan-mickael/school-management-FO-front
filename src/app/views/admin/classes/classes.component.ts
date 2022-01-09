@@ -44,11 +44,10 @@ export class ClassesComponent implements OnInit {
   async fetchApiData() {
     await this.spinnerService.show(this.spinner.name);
     try {
-      const res = await Promise.all([
+      const data = await Promise.all([
         this.resourceService.getPromise(this.resourceService.findAll('classes/')),
         this.resourceService.getPromise(this.resourceService.findAll('subclasses/'))
       ])
-      const data = await Promise.all(res)
       this.classes = [this.classes[0], ...data[0] as Class[]]
       this.subclasses = data[1] as Subclass[]
       this.selectedSubclassId = this.subclasses[0].id
@@ -63,6 +62,7 @@ export class ClassesComponent implements OnInit {
     await this.spinnerService.show(this.spinner.name)
     try {
       this.subclasses = await this.resourceService.getPromise(this.resourceService.findOne('subclasses/', this.selectedClass)) as Subclass[]
+      this.selectedSubclassId = this.subclasses[0].id
       this.spinnerService.hide(this.spinner.name)
     } catch (error) {
       this.errorService.handleError(error, this.spinner.name)
