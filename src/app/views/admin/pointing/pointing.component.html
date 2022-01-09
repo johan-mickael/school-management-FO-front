@@ -42,7 +42,7 @@
                     <span class="text-uppercase">{{planning.place}}</span>
                   </p>
                 </th>
-                <th class="text-right" rowspan="1" colspan="4">
+                <th class="text-right" rowspan="1" colspan="5">
                   <h2 id="course-name" class="text-uppercase">{{planning.subject_description}} -
                     {{planning.subject_name}}</h2>
                   <h5 id="professor-name" class="text-capitalize">{{planning.professor_name}}</h5>
@@ -55,6 +55,7 @@
                   <th class="text-center">En salle</th>
                   <th class="text-center">Présent</th>
                   <th class="text-center">En Retard</th>
+                  <th class="text-center">Heure d'arrivée</th>
                   <th class="text-right">Commentaires</th>
                 </tr>
                 <tr *ngFor="let student of students; let index = index"
@@ -67,33 +68,38 @@
                   </td>
                   <td class="text-center border">
                     <div class="icheck-success d-inline">
-                      <input type="checkbox" id="a{{index}}" formControlName="is_present_class" #checka
-                        [ngModel]="presenceForm.value.presences[index].is_present_class"
-                        (change)="onChangePresentClass(checkb, index, $event)" [attr.disabled]="done ? '' : null">
+                      <input type="checkbox" id="a{{index}}" formControlName="is_present_class"
+                        [(ngModel)]="presenceForm.value.presences[index].is_present_class"
+                        (change)="onChangePresentClass(index, $event)" [attr.disabled]="done ? '' : null">
                       <label for="a{{index}}">
                       </label>
                     </div>
                   </td>
                   <td class="text-center border">
                     <div class="icheck-primary d-inline">
-                      <input type="checkbox" id="b{{index}}" formControlName="is_present" #checkb
-                        [ngModel]="presenceForm.value.presences[index].is_present"
-                        (change)="onChangePresent(checka, checkc, index, $event)" [attr.disabled]="done ? '' : null">
+                      <input type="checkbox" id="b{{index}}" formControlName="is_present"
+                        [(ngModel)]="presenceForm.value.presences[index].is_present"
+                        (change)="onChangePresent(index, $event)" [attr.disabled]="done ? '' : null">
                       <label for="b{{index}}">
                       </label>
                     </div>
                   </td>
                   <td class="text-center border">
                     <div class="icheck-danger d-inline">
-                      <input type="checkbox" id="c{{index}}" formControlName="is_late" #checkc
-                        [ngModel]="presenceForm.value.presences[index].is_late"
-                        (change)="onChangeLate(checkb, index, $event)" [attr.disabled]="done ? '' : null">
+                      <input type="checkbox" id="c{{index}}" formControlName="is_late"
+                        [(ngModel)]="presenceForm.value.presences[index].is_late" [attr.disabled]="''">
                       <label for="c{{index}}">
                       </label>
                     </div>
                   </td>
-                  <td class=" border" style="padding: 0;">
-                    <textarea style="border: none;" class="form-control" rows="2" formControlName="comment" [readonly]="done"></textarea>
+                  <td class="border p-0">
+                    <input type="time" class="form-control border-0 text-center" formControlName="arriving_time"
+                      [readonly]="done" [(ngModel)]="presenceForm.value.presences[index].arriving_time"
+                      (change)="onArrivingTimeChange(index, $event)" />
+                  </td>
+                  <td class="border p-0">
+                    <textarea class="form-control border-0" rows="2" formControlName="comment"
+                      [readonly]="done"></textarea>
                   </td>
                 </tr>
               </div>

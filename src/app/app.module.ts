@@ -46,7 +46,7 @@ FullCalendarModule.registerPlugins([
     PointingComponent,
     ConcatPipe,
     StudentsComponent,
-    SubclassComponent
+    SubclassComponent,
   ],
   imports: [
     BrowserModule,

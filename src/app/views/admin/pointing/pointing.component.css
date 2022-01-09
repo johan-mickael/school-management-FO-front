@@ -13,3 +13,16 @@
   overflow-x: auto;
   padding: 2px!important;
 }
+
+.pointing-row {
+  display: contents;
+}
+
+table td {
+  vertical-align: middle;
+}
+
+.form-control:disabled, .form-control[readonly] {
+  background-color: white;
+  opacity: .7;
+}

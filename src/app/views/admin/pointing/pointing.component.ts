@@ -1,17 +1,15 @@
-import { Component, OnInit, AfterViewInit, AfterContentInit, ViewChild, ElementRef, Inject, Input, AfterContentChecked, ViewChildren, QueryList } from '@angular/core';
-import { ErrorService } from '../../../services/error.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { ResourceService } from '../../../services/resource.service';
-import { Subscription } from 'rxjs';
-import { Planning } from '../../../services/interfaces';
+import { Component, OnInit, AfterViewInit, AfterContentInit, ViewChild, ElementRef, Inject, Input, AfterContentChecked, ViewChildren, QueryList } from '@angular/core'
+import { ErrorService } from '../../../services/error.service'
+import { NgxSpinnerService } from 'ngx-spinner'
+import { ResourceService } from '../../../services/resource.service'
+import { Subscription } from 'rxjs'
+import { Planning } from '../../../services/interfaces'
 // @ts-ignore
-import * as html2pdf from 'html2pdf.js';
-import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormArray } from '@angular/forms';
-import { ToastService } from '../../../services/toast.service';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { DatePipe } from '@angular/common';
+import * as html2pdf from 'html2pdf.js'
+import { ActivatedRoute } from '@angular/router'
+import { FormBuilder, FormArray } from '@angular/forms'
+import { ToastService } from '../../../services/toast.service'
+import jsPDF from 'jspdf'
 
 @Component({
   selector: 'app-pointing',
@@ -27,16 +25,15 @@ export class PointingComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastService: ToastService,
-    private datePipe: DatePipe
   ) { }
 
   presenceForm = this.formBuilder.group({
     presences: this.formBuilder.array([]),
-  });
+  })
   readonly spinner = {
     name: "pointing-spinner",
     type: "line-scale"
-  };
+  }
   readonly status = [
     {
       text: 'en cours',
@@ -54,21 +51,21 @@ export class PointingComponent implements OnInit {
       icon: 'fas fa-times'
     }
   ]
-  message: string;
-  subscription: Subscription;
-  data: any;
-  presencesData: any;
-  planning: Planning;
-  students: any;
-  size: number;
-  dataLoaded: Promise<boolean>;
-  done: boolean | string;
-  title: string;
+  message: string
+  subscription: Subscription
+  data: any
+  presencesData: any
+  planning: Planning
+  students: any
+  size: number
+  dataLoaded: Promise<boolean>
+  done: boolean | string
+  title: string
 
   ngOnInit(): void {
-    this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message);
-    this.spinnerService.show(this.spinner.name);
-    this.fetchApiData();
+    this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message)
+    this.spinnerService.show(this.spinner.name)
+    this.fetchApiData()
   }
 
   innerHTML(selector: string) {
@@ -77,75 +74,108 @@ export class PointingComponent implements OnInit {
 
   async savePresences() {
     try {
-      await this.spinnerService.show(this.spinner.name);
+      await this.spinnerService.show(this.spinner.name)
       const res = await Promise.resolve(
         this.resourceService.getPromise(this.resourceService.postData('presences/save', this.presenceForm.value))
       )
       await this.fetchApiData()
       this.toastService.show('Pointage étudiant', 'Présence enregistré avec succès.', 'success')
     } catch (error) {
-      await this.errorService.handleError(error, this.spinner.name);
+      await this.errorService.handleError(error, this.spinner.name)
     }
   }
 
   async endPlanning() {
     if (confirm('Voulez-vous vraiment terminer le cours ?')) {
       try {
-        await this.spinnerService.show(this.spinner.name);
+        await this.spinnerService.show(this.spinner.name)
         const res = await Promise.resolve(
           this.resourceService.getPromise(this.resourceService.postData('presences/terminate', this.presenceForm.value))
         )
         await this.fetchApiData()
         this.toastService.show('Pointage étudiant', 'Cours terminé avec succès.', 'info')
       } catch (error) {
-        await this.errorService.handleError(error, this.spinner.name);
+        await this.errorService.handleError(error, this.spinner.name)
       }
     }
   }
 
   async fetchApiData() {
-    const planningId = this.activatedRoute.snapshot.params['id'];
-    this.presences.clear();
+    const planningId = this.activatedRoute.snapshot.params['id']
+    this.presences.clear()
     try {
       const res = await Promise.resolve(
         this.resourceService.getPromise(this.resourceService.findOne('presences/', planningId))
       )
-      this.planning = res.planning as Planning;
-      this.students = res.students;
-      this.presencesData = res.presences;
-      this.done = (this.planning.status == 2) ? true : false;
+      this.planning = res.planning as Planning
+      this.students = res.students
+      this.presencesData = res.presences
+      this.done = (this.planning.status == 2) ? true : false
       await this.generateRow(this.students, this.presencesData)
-      this.dataLoaded = Promise.resolve(true);
-      this.spinnerService.hide(this.spinner.name);
+      this.dataLoaded = Promise.resolve(true)
+      this.spinnerService.hide(this.spinner.name)
     } catch (error) {
-      await this.errorService.handleError(error, this.spinner.name);
+      await this.errorService.handleError(error, this.spinner.name)
     }
   }
 
   get presences() {
-    return this.presenceForm.controls['presences'] as FormArray;
+    return this.presenceForm.controls['presences'] as FormArray
   }
 
-  onChangePresentClass(checkb: any, index: number, values: any): void {
+  onChangePresentClass(index: number, values: any): void {
     if (values.currentTarget.checked) {
-      this.presenceForm.value.presences[index].is_present = true;
+      setTimeout(() => {
+        this.presenceForm.value.presences[index].is_present = true
+      }, 0)
+      setTimeout(() => {
+        this.presenceForm.value.presences[index].arriving_time = this.planning.start
+      }, 0)
     }
   }
 
-  onChangePresent(checka: any, checkc: any, index: number, values: any): void {
+  onChangePresent(index: number, values: any): void {
     if (!values.currentTarget.checked) {
       setTimeout(() => {
-        this.presenceForm.value.presences[index].is_late = false;
-      }, 0);
+        this.presenceForm.value.presences[index].is_late = false
+      }, 0)
       setTimeout(() => {
-        this.presenceForm.value.presences[index].is_present_class = false;
-      }, 0);
+        this.presenceForm.value.presences[index].is_present_class = false
+      }, 0)
+      setTimeout(() => {
+        this.presenceForm.value.presences[index].arriving_time = null
+      }, 0)
+    } else {
+      this.presenceForm.value.presences[index].arriving_time = this.planning.start
     }
   }
 
-  onChangeLate(checkb: any, index: number, values: any): void {
+  onChangeLate(index: number, values: any): void {
+    if (this.presenceForm.value.presences[index].arriving_time == this.planning.start) {
+      this.presenceForm.value.presences[index].is_late = false
+    }
     if (values.currentTarget.checked) {
-      this.presenceForm.value.presences[index].is_present = true;
+      this.presenceForm.value.presences[index].is_present = true
+    }
+  }
+
+  onArrivingTimeChange(index: number, values: any): void {
+    if (values.currentTarget.value == this.planning.start.substring(0, 5)) {
+      this.presenceForm.value.presences[index].is_present = true
+    }
+    else if (values.currentTarget.value < this.planning.start) {
+      this.presenceForm.value.presences[index].arriving_time = this.planning.start
+    } else if (values.currentTarget.value > this.planning.end) {
+      this.presenceForm.value.presences[index].arriving_time = this.planning.end
+    }
+    const is_late = this.presenceForm.value.presences[index].arriving_time > this.planning.start
+    setTimeout(() => {
+      this.presenceForm.value.presences[index].is_late = is_late
+    }, 0)
+    if (is_late) {
+      setTimeout(() => {
+        this.presenceForm.value.presences[index].is_present = is_late
+      }, 0)
     }
   }
 
@@ -157,6 +187,7 @@ export class PointingComponent implements OnInit {
         is_present_class: false,
         is_present: false,
         is_late: false,
+        arriving_time: null,
         comment: ''
       }
     } else {
@@ -166,6 +197,7 @@ export class PointingComponent implements OnInit {
         is_present_class: presence.is_present_class,
         is_present: presence.is_present,
         is_late: presence.is_late,
+        arriving_time: presence.arriving_time,
         comment: presence.comment
       }
     }
@@ -174,15 +206,14 @@ export class PointingComponent implements OnInit {
 
   generateRow(students: any[], presences: any) {
     students.map((student, index) => {
-      this.presences.push(this.newRow(student, presences[index]));
+      this.presences.push(this.newRow(student, presences[index]))
     })
-    console.log(this.presenceForm.value)
   }
 
   async makePDF() {
-    var element = document.getElementById('presence');
+    var element = document.getElementById('presence')
     const outputName = 'Presence_' + this.planning.subclass_name + '_' + this.planning.planning_date +
-      '_' + this.planning.start + '-' + this.planning.end;
+      '_' + this.planning.start + '-' + this.planning.end
     await html2pdf()
       .from(element)
       .set({
@@ -201,16 +232,16 @@ export class PointingComponent implements OnInit {
           mode: ['avoid-all']
         }
       })
-      .save(outputName);
+      .save(outputName)
     this.toastService.show('Pointage étudiant', 'Fiche de présence téléchargé.', 'info')
   }
 
   async openPDF() {
     let PDF = new jsPDF('p', 'mm', 'a4')
     const defaultFontSize = (PDF.getFontSize() / 2) + 5
-    var pageHeight = PDF.internal.pageSize.height || PDF.internal.pageSize.getHeight();
-    var pageWidth = PDF.internal.pageSize.width || PDF.internal.pageSize.getWidth();
-    const title = this.innerHTML("#title");
+    var pageHeight = PDF.internal.pageSize.height || PDF.internal.pageSize.getHeight()
+    var pageWidth = PDF.internal.pageSize.width || PDF.internal.pageSize.getWidth()
+    const title = this.innerHTML("#title")
     var planningDate = this.innerHTML("#planning-date") + ' - ' + this.innerHTML("#planning-hour")
     planningDate = planningDate.charAt(0).toUpperCase() + planningDate.slice(1)
     PDF.setFontSize(defaultFontSize + 6)
