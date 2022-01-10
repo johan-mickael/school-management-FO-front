@@ -25,6 +25,7 @@ import { ConcatPipe } from './pipe/ConcatPipe';
 import { StudentsComponent } from './views/admin/classes/students/students.component';
 import { SubclassComponent } from './views/admin/classes/subclass/subclass.component';
 import { ToastrModule } from 'ngx-toastr';
+import { PlanningChartComponent } from './views/admin/pointing/planning-chart/planning-chart.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -47,6 +48,7 @@ FullCalendarModule.registerPlugins([
     ConcatPipe,
     StudentsComponent,
     SubclassComponent,
+    PlanningChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,7 @@ FullCalendarModule.registerPlugins([
       timeOut: 3000,
       preventDuplicates: true,
       closeButton: true,
-    })
+    }),
   ],
   providers: [ErrorService, DatePipe],
   bootstrap: [AppComponent],

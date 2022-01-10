@@ -15,7 +15,7 @@
       <div class="col-sm-6">
       </div>
     </div>
-    <form action="" method="POST" [formGroup]="presenceForm" *ngIf="students.length !== 0; else noStudentAlert">
+    <form action="" method="POST" [formGroup]="presenceForm">
       <input type="hidden" name="_token" value="ilQzY07iiLWigwyNt5H3Hom29MVQlq9XPzeNjG7b">
       <div class="card">
         <div class="card-header">
@@ -49,7 +49,7 @@
                 </th>
               </tr>
               <tr></tr>
-              <div id="table-content" style="display: contents;">
+              <div id="table-content" style="display: contents;" *ngIf="students.length !== 0; else noStudentAlert">
                 <tr style="background: rgb(248, 248, 237);">
                   <th>Nom et prénoms</th>
                   <th class="text-center">En salle</th>
@@ -105,6 +105,12 @@
               </div>
             </tbody>
           </table>
+          <ng-template #noStudentAlert>
+            <td class="alert alert-warning text-center" role="alert" colspan="6">
+              <i class="fas fa-exclamation-circle"></i>
+              <b> Aucun étudiant dans cette classe.</b>
+            </td>
+          </ng-template>
         </div>
       </div>
       <div *ngIf="students.length !== 0" id="btn-group">
@@ -118,11 +124,7 @@
         </div>
       </div>
     </form>
-    <ng-template #noStudentAlert>
-      <div class="alert alert-warning text-center" role="alert">
-        <i class="fas fa-exclamation-circle"></i>
-        <b> Aucun étudiant dans cette classe.</b>
-      </div>
-    </ng-template>
+    <hr>
+    <app-planning-chart [planning]="planning"></app-planning-chart>
   </div>
 </div>

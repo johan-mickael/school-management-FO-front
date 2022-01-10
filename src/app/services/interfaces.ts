@@ -36,6 +36,7 @@ export interface Planning {
   is_remote: number,
   description: string,
   status: number,
+  subject_id: number,
   subject_name: string,
   subject_description: string,
   professor_name: string
@@ -56,4 +57,9 @@ export interface SchoolYear {
   description: string,
   start: string,
   end: string
+}
+
+export interface  ChartData {
+  name: string,
+  value: number
 }

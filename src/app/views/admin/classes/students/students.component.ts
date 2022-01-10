@@ -32,7 +32,6 @@ export class StudentsComponent implements OnInit, OnChanges {
     autoWidth: true
   }
 
-
   async ngOnInit() {
     await this.fetchApiData();
     this.dataLoaded = Promise.resolve(true);

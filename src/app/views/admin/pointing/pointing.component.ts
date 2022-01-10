@@ -62,6 +62,7 @@ export class PointingComponent implements OnInit {
   done: boolean | string
   title: string
 
+
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message)
     this.spinnerService.show(this.spinner.name)

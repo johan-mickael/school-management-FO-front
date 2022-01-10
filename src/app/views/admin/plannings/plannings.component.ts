@@ -113,11 +113,10 @@ export class PlanningsComponent implements OnInit, OnDestroy {
   async fetchApiData() {
     this.spinnerService.show(this.spinner.name)
     try {
-      const res = await Promise.all([
+      const data = await Promise.all([
         this.resourceService.getPromise(this.resourceService.findAll('plannings/')),
         this.resourceService.getPromise(this.resourceService.findAll('subclasses/'))
       ])
-      const data = await Promise.all(res)
       this.setCalendarEvents(data[0])
       this.subclasses = [this.subclasses[0], ...data[1] as Subclass[]]
       this.dataLoaded = Promise.resolve(true)

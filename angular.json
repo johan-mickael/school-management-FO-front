@@ -42,7 +42,7 @@
               "node_modules/admin-lte/plugins/jquery/jquery.min.js",
               "node_modules/admin-lte/plugins/jquery-ui/jquery-ui.min.js",
               "node_modules/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js",
-              "node_modules/admin-lte/plugins/chart.js/Chart.min.js",
+              "node_modules/chart.js/dist/chart.min.js",
               "node_modules/admin-lte/plugins/sparklines/sparkline.js",
               "node_modules/admin-lte/plugins/jqvmap/jquery.vmap.min.js",
               "node_modules/admin-lte/plugins/jqvmap/maps/jquery.vmap.usa.js",
@@ -62,8 +62,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "4mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
