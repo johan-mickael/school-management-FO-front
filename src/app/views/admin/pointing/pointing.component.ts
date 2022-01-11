@@ -42,7 +42,7 @@ export class PointingComponent implements OnInit {
     },
     {
       text: 'terminé',
-      class: 'badge badge-danger',
+      class: 'badge badge-secondary',
       icon: 'fas fa-times'
     }
   ]
