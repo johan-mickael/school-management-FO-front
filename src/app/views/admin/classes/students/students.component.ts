@@ -60,13 +60,13 @@ export class StudentsComponent implements OnInit, OnChanges {
 
   async fetchApiData() {
     try {
-      const data = await Promise.all([
-        this.resourceService.getPromise(this.resourceService.findAll('schoolyears/')),
-        this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.schoolYearId + '/'))
-      ])
-      this.schoolYears = data[0] as SchoolYear[]
+      this.schoolYears = await Promise.resolve(
+        this.resourceService.getPromise(this.resourceService.findAll('schoolyears/'))
+      ) as SchoolYear[]
       this.schoolYearId = this.schoolYears[0].id
-      this.students = data[1] as Student[]
+      this.students = await Promise.resolve(
+        this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.schoolYearId + '/'))
+      )
       this.dataLoaded = Promise.resolve(true)
       await this.spinnerService.hide('student-spinner');
     } catch (error) {

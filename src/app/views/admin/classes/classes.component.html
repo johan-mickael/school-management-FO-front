@@ -1,8 +1,8 @@
 <div class="p-3 position-relative min-vh-100">
-  <ngx-spinner [fullScreen]="false" name="{{spinner.name}}" bdColor="rgba(255, 255, 255, .8)" size="medium"
-    color="#343a40" type="{{spinner.type}}">Chargement des classes ...</ngx-spinner>
+  <ngx-spinner [fullScreen]="false" name="class-spinner" bdColor="rgba(255, 255, 255, .8)" size="medium"
+    color="#343a40" type="square-jelly-box">Chargement des classes ...</ngx-spinner>
   <ngx-spinner [fullScreen]="false" name="student-spinner" bdColor="rgba(255, 255, 255, .8)" size="medium"
-    color="#343a40" type="ball-clip-rotate-multiple">Chargement des étudiants ...</ngx-spinner>
+    color="#343a40" type="square-jelly-box">Chargement des étudiants ...</ngx-spinner>
   <div *ngIf="dataLoaded | async">
     <div class="form mb-3">
       <label class="form-label">Choisir les classes</label>

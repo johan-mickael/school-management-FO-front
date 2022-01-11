@@ -28,10 +28,7 @@ export class PointingComponent implements OnInit {
   presenceForm = this.formBuilder.group({
     presences: this.formBuilder.array([]),
   })
-  readonly spinner = {
-    name: "pointing-spinner",
-    type: "line-scale"
-  }
+
   readonly status = [
     {
       text: 'en cours',
@@ -63,7 +60,7 @@ export class PointingComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message)
-    this.spinnerService.show(this.spinner.name)
+    this.spinnerService.show("pointing-spinner")
     this.fetchApiData()
   }
 
@@ -73,28 +70,28 @@ export class PointingComponent implements OnInit {
 
   async savePresences() {
     try {
-      await this.spinnerService.show(this.spinner.name)
+      await this.spinnerService.show("pointing-spinner")
       const res = await Promise.resolve(
         this.resourceService.getPromise(this.resourceService.postData('presences/save', this.presenceForm.value))
       )
       await this.fetchApiData()
       this.toastService.show('Pointage étudiant', 'Présence enregistré avec succès.', 'success')
     } catch (error) {
-      await this.errorService.handleError(error, this.spinner.name)
+      await this.errorService.handleError(error, "pointing-spinner")
     }
   }
 
   async endPlanning() {
     if (confirm('Voulez-vous vraiment terminer le cours ?')) {
       try {
-        await this.spinnerService.show(this.spinner.name)
+        await this.spinnerService.show("pointing-spinner")
         const res = await Promise.resolve(
           this.resourceService.getPromise(this.resourceService.postData('presences/terminate', this.presenceForm.value))
         )
         await this.fetchApiData()
         this.toastService.show('Pointage étudiant', 'Cours terminé avec succès.', 'info')
       } catch (error) {
-        await this.errorService.handleError(error, this.spinner.name)
+        await this.errorService.handleError(error, "pointing-spinner")
       }
     }
   }
@@ -112,9 +109,9 @@ export class PointingComponent implements OnInit {
       this.done = (this.planning.status == 2) ? true : false
       await this.generateRow(this.students, this.presencesData)
       this.dataLoaded = Promise.resolve(true)
-      this.spinnerService.hide(this.spinner.name)
+      this.spinnerService.hide("pointing-spinner")
     } catch (error) {
-      await this.errorService.handleError(error, this.spinner.name)
+      await this.errorService.handleError(error, "pointing-spinner")
     }
   }
 

@@ -18,11 +18,6 @@ export class ClassesComponent implements OnInit {
     private errorService: ErrorService
   ) { }
 
-  readonly spinner = {
-    name: "class-spinner",
-    type: "square-jelly-box"
-  };
-
   selectedClass: number = 0;
   classes: Class[] = [
     {
@@ -42,7 +37,7 @@ export class ClassesComponent implements OnInit {
   }
 
   async fetchApiData() {
-    await this.spinnerService.show(this.spinner.name);
+    await this.spinnerService.show("class-spinner");
     try {
       const data = await Promise.all([
         this.resourceService.getPromise(this.resourceService.findAll('classes/')),
@@ -54,18 +49,18 @@ export class ClassesComponent implements OnInit {
       this.dataLoaded = Promise.resolve(true)
       await this.spinnerService.hide('class-spinner');
     } catch (error) {
-      this.errorService.handleError(error, this.spinner.name)
+      this.errorService.handleError(error, "class-spinner")
     }
   }
 
   async onClassChange() {
-    await this.spinnerService.show(this.spinner.name)
+    await this.spinnerService.show("class-spinner")
     try {
       this.subclasses = await this.resourceService.getPromise(this.resourceService.findOne('subclasses', this.selectedClass)) as Subclass[]
       this.selectedSubclassId = this.subclasses[0].id
-      this.spinnerService.hide(this.spinner.name)
+      this.spinnerService.hide("class-spinner")
     } catch (error) {
-      this.errorService.handleError(error, this.spinner.name)
+      this.errorService.handleError(error, "class-spinner")
     }
   }
 }

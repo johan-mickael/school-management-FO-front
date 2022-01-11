@@ -17,10 +17,7 @@ export class PlanningChartComponent implements OnInit {
     private spinnerService: NgxSpinnerService,
     private errorService: ErrorService,
   ) { }
-  readonly spinner = {
-    name: "chart-spinner",
-    type: "ball-grid-pulse"
-  }
+
   @Input() planning: Planning
   inPlaceLabel: string = 'Présenciel'
   remoteLabel: string = 'Distanciel'
@@ -63,7 +60,7 @@ export class PlanningChartComponent implements OnInit {
       } as ChartData))
       this.pieChartReady = Promise.resolve(true)
     } catch (error) {
-      this.errorService.handleError(error, this.spinner.name)
+      this.errorService.handleError(error, "chart-spinner")
     }
   }
 

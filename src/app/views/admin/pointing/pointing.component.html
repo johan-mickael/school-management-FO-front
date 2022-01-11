@@ -1,7 +1,11 @@
 <div class="position-relative min-vh-100 p-3">
-  <ngx-spinner [fullScreen]="false" name="{{spinner.name}}" bdColor="rgba(51,51,51,0.5)" size="medium" color="#343a40"
-    type="{{spinner.type}}">
-    <p class="text-light"></p>
+  <ngx-spinner [fullScreen]="false" name="pointing-spinner" bdColor="rgba(51,51,51,0.5)" size="medium" color="#343a40"
+    type="line-scale">
+    <p class="text-dark">Chargement des élèves ...</p>
+  </ngx-spinner>
+  <ngx-spinner [fullScreen]="false" name="chart-spinner" bdColor="rgba(51,51,51,0.5)" size="medium" color="#343a40"
+    type="line-scale">
+    <p class="text-dark">Genération des graphes ...</p>
   </ngx-spinner>
 
   <div *ngIf="(dataLoaded | async)">
