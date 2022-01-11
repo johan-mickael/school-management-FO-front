@@ -22,7 +22,11 @@ export class ResourceService {
   }
 
   findOne(resource: string, id: number) {
-    return this.httpClient.get(this.url + resource + id)
+    return this.httpClient.get(this.url + resource + '/' + id)
+  }
+
+  findByMultipleId(resource: string, id1: number, id2:number) {
+    return this.httpClient.get(this.url + resource + '/' + id1 + '/' + id2)
   }
 
   postData(resource: string, input: any) {

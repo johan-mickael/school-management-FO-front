@@ -63,6 +63,7 @@
                   formGroupName="{{index}}">
                   <input type="hidden" formControlName="student_id" [(ngModel)]="student.student_id" />
                   <input type="hidden" formControlName="planning_id" [(ngModel)]="planning.id" />
+                  <input type="hidden" formControlName="subject_id" [(ngModel)]="planning.subject_id" />
                   <td class="text-capitalize border"><a href="">{{ [student.first_name, student.last_name] | concatPipe
                       }}</a>
                   </td>

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, SimpleChanges } from '@angular/core'
 import { CalendarOptions } from '@fullcalendar/angular'
 import frLocale from '@fullcalendar/core/locales/fr'
 import { ResourceService } from '../../../services/resource.service'
-import { Subclass, PlanningCalendar } from '../../../services/interfaces'
+import { Subclass, PlanningCalendar, SchoolYear } from '../../../services/interfaces';
 import { NgxSpinnerService } from "ngx-spinner"
 import { ErrorService } from '../../../services/error.service'
 import { Subscription } from 'rxjs'
@@ -25,7 +25,6 @@ export class PlanningsComponent implements OnInit, OnDestroy {
     name: "planning-spinner",
     type: "ball-grid-pulse"
   }
-  readonly resources: string[] = ['plannings/', 'subclasses/', 'plannings/filter/']
   readonly facetofaceColor = '#493fb5'
   readonly remoteColor = '#f35304'
 
@@ -39,6 +38,8 @@ export class PlanningsComponent implements OnInit, OnDestroy {
       class_name: '',
       class_description: ''
     }]
+  schoolyearId: number;
+  schoolYears: SchoolYear[];
 
   headerToolbarForAllClasses: {} = {
     left: 'prev,next today',
@@ -90,11 +91,11 @@ export class PlanningsComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe()
   }
 
-  async onClassChange() {
+  async onSelectInputChange() {
     await this.spinnerService.show(this.spinner.name)
     try {
       const res = await Promise.resolve(
-        this.resourceService.getPromise(this.resourceService.findOne(this.resources[2], this.selectedClass))
+        this.resourceService.getPromise(this.resourceService.findByMultipleId('plannings/filter', this.schoolyearId, this.selectedClass))
       ) as PlanningCalendar[]
       this.setCalendarEvents(res)
       if (this.selectedClass != 0) {
@@ -114,11 +115,17 @@ export class PlanningsComponent implements OnInit, OnDestroy {
     this.spinnerService.show(this.spinner.name)
     try {
       const data = await Promise.all([
-        this.resourceService.getPromise(this.resourceService.findAll('plannings/')),
-        this.resourceService.getPromise(this.resourceService.findAll('subclasses/'))
+        this.resourceService.getPromise(this.resourceService.findAll('subclasses')),
+        this.resourceService.getPromise(this.resourceService.findAll('schoolyears')),
       ])
-      this.setCalendarEvents(data[0])
-      this.subclasses = [this.subclasses[0], ...data[1] as Subclass[]]
+
+      this.subclasses = [this.subclasses[0], ...data[0] as Subclass[]]
+      this.schoolYears = data[1] as SchoolYear[]
+      this.schoolyearId = this.schoolYears[0].id
+      const planningData = await Promise.resolve(
+        this.resourceService.getPromise(this.resourceService.findOne('plannings', this.schoolyearId))
+      )
+      this.setCalendarEvents(planningData)
       this.dataLoaded = Promise.resolve(true)
       this.spinnerService.hide(this.spinner.name)
     } catch (error) {

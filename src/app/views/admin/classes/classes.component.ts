@@ -61,7 +61,7 @@ export class ClassesComponent implements OnInit {
   async onClassChange() {
     await this.spinnerService.show(this.spinner.name)
     try {
-      this.subclasses = await this.resourceService.getPromise(this.resourceService.findOne('subclasses/', this.selectedClass)) as Subclass[]
+      this.subclasses = await this.resourceService.getPromise(this.resourceService.findOne('subclasses', this.selectedClass)) as Subclass[]
       this.selectedSubclassId = this.subclasses[0].id
       this.spinnerService.hide(this.spinner.name)
     } catch (error) {

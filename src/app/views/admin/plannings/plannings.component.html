@@ -1,15 +1,27 @@
 <div class="p-3 position-relative min-vh-100">
-    <ngx-spinner [fullScreen]="false" name="{{spinner.name}}" bdColor="rgba(255, 255, 255, .5)" size="medium"
-        color="#343a40" type="{{spinner.type}}">
-        <p class="text-light"></p>
-    </ngx-spinner>
-    <div *ngIf="dataLoaded | async">
+  <ngx-spinner [fullScreen]="false" name="{{spinner.name}}" bdColor="rgba(255, 255, 255, .5)" size="medium"
+    color="#343a40" type="{{spinner.type}}">
+    <p class="text-light"></p>
+  </ngx-spinner>
+  <div *ngIf="dataLoaded | async">
+    <div class="row">
+      <div class="col-md-6">
         <label class="form-label">Choisir une classe</label>
-        <select [(ngModel)]="selectedClass" (ngModelChange)="onClassChange()" class="form-control"
-            id="allocation-algorithm">
-            <option *ngFor="let subclass of subclasses" [value]="subclass.id">{{subclass.name}}</option>
+        <select [(ngModel)]="selectedClass" (ngModelChange)="onSelectInputChange()" class="form-control"
+          id="allocation-algorithm">
+          <option *ngFor="let subclass of subclasses" [value]="subclass.id">{{subclass.name}}</option>
         </select>
-
-        <full-calendar id="full-calendar" class="border mt-2" [options]="calendarOptions"></full-calendar>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Année scolaire</label>
+        <select class="form-control" id="allocation-algorithm" [(ngModel)]="schoolyearId"
+          (change)="onSelectInputChange()">
+          <option *ngFor="let schoolYear of schoolYears" [value]="schoolYear.id">{{schoolYear.description}}</option>
+        </select>
+      </div>
     </div>
+
+
+    <full-calendar id="full-calendar" class="border mt-2" [options]="calendarOptions"></full-calendar>
+  </div>
 </div>

@@ -4,8 +4,6 @@ import { NgxSpinnerService } from 'ngx-spinner'
 import { ResourceService } from '../../../services/resource.service'
 import { Subscription } from 'rxjs'
 import { Planning } from '../../../services/interfaces'
-// @ts-ignore
-import * as html2pdf from 'html2pdf.js'
 import { ActivatedRoute } from '@angular/router'
 import { FormBuilder, FormArray } from '@angular/forms'
 import { ToastService } from '../../../services/toast.service'
@@ -106,7 +104,7 @@ export class PointingComponent implements OnInit {
     this.presences.clear()
     try {
       const res = await Promise.resolve(
-        this.resourceService.getPromise(this.resourceService.findOne('presences/', planningId))
+        this.resourceService.getPromise(this.resourceService.findOne('presences', planningId))
       )
       this.planning = res.planning as Planning
       this.students = res.students
@@ -184,6 +182,7 @@ export class PointingComponent implements OnInit {
     if (presence === undefined) {
       var formGroup = {
         planning_id: this.planning.id,
+        subject_id: this.planning.subject_id,
         student_id: student.student_id,
         is_present_class: false,
         is_present: false,
@@ -194,6 +193,7 @@ export class PointingComponent implements OnInit {
     } else {
       formGroup = {
         planning_id: this.planning.id,
+        subject_id: this.planning.subject_id,
         student_id: student.student_id,
         is_present_class: presence.is_present_class,
         is_present: presence.is_present,
@@ -209,32 +209,6 @@ export class PointingComponent implements OnInit {
     students.map((student, index) => {
       this.presences.push(this.newRow(student, presences[index]))
     })
-  }
-
-  async makePDF() {
-    var element = document.getElementById('presence')
-    const outputName = 'Presence_' + this.planning.subclass_name + '_' + this.planning.planning_date +
-      '_' + this.planning.start + '-' + this.planning.end
-    await html2pdf()
-      .from(element)
-      .set({
-        margin: [10, 5, 10, 5],
-        image: {
-          type: 'jpeg',
-          quality: 1
-        },
-        jsPDF: {
-          unit: 'mm',
-          format: 'A4',
-          orientation: 'landscape'
-        },
-        enableLinks: true,
-        pageBreak: {
-          mode: ['avoid-all']
-        }
-      })
-      .save(outputName)
-    this.toastService.show('Pointage étudiant', 'Fiche de présence téléchargé.', 'info')
   }
 
   async openPDF() {

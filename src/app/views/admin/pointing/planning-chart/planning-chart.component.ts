@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core'
 import { ResourceService } from '../../../../services/resource.service'
 import { NgxSpinnerService } from 'ngx-spinner'
 import { ErrorService } from '../../../../services/error.service'
-import { ChartData, Planning } from '../../../../services/interfaces';
-declare var Chart:any;
+import { ChartData, Planning } from '../../../../services/interfaces'
+declare var Chart: any
 
 @Component({
   selector: 'app-planning-chart',
@@ -21,65 +21,99 @@ export class PlanningChartComponent implements OnInit {
     name: "chart-spinner",
     type: "ball-grid-pulse"
   }
-
-
-
   @Input() planning: Planning
-  subjectStatusData: any = []
-  planningStatusData: any = []
+  inPlaceLabel: string = 'Présenciel'
+  remoteLabel: string = 'Distanciel'
+  subjectRemoteData: any = []
+  subjectRemoteDataDone: any = []
+  subjectRemoteDataNotDone: any = []
   chartsBarHorizontalStackedReady: Promise<boolean>
   pieChartReady: Promise<boolean>
-
-  view: any[] = [700, 400]
-
-  // options
-  showXAxis: boolean = true
-  showYAxis: boolean = true
-  gradient: boolean = false
-  showLegend: boolean = true
-  colorScheme = {
-    domain: ['#5AA454', '#C7B42C', '#AAAAAA']
-  }
+  borderColorInPlace: string = '#D6E9C6'
+  backgroundColorInPlace: string = '#D6E9C6'
+  borderColorRemote: string = '#b0cce9'
+  backgroundColorRemote: string = '#b0cce9'
+  canvasHeight: number = 300
 
   async ngOnInit() {
+    this.spinnerService.show('chart-spinner')
     await this.fetchApiData()
+    this.spinnerService.hide('chart-spinner')
+    this.initCharts()
+  }
 
-    const footer = (tooltipItems:any) => {
-      var sum = 0;
-      console.log(tooltipItems)
+  async fetchApiData() {
+    try {
+      const data = await Promise.all([
+        this.resourceService.getPromise(this.resourceService.findAll('charts/subject/remote/' + this.planning.subject_id)),
+        this.resourceService.getPromise(this.resourceService.findAll('charts/subject/remote/' + this.planning.subject_id + '/0')),
+        this.resourceService.getPromise(this.resourceService.findAll('charts/subject/remote/' + this.planning.subject_id + '/2')),
+      ])
+      this.subjectRemoteData = await data[0].map((item: any) => ({
+        name: item.is_remote ? this.remoteLabel : this.inPlaceLabel,
+        value: item.hours
+      } as ChartData))
+      this.subjectRemoteDataNotDone = await data[1].map((item: any) => ({
+        name: item.is_remote ? this.remoteLabel : this.inPlaceLabel,
+        value: item.hours
+      } as ChartData))
+      this.subjectRemoteDataDone = await data[2].map((item: any) => ({
+        name: item.is_remote ? this.remoteLabel : this.inPlaceLabel,
+        value: item.hours
+      } as ChartData))
+      this.pieChartReady = Promise.resolve(true)
+    } catch (error) {
+      this.errorService.handleError(error, this.spinner.name)
+    }
+  }
 
-      tooltipItems.forEach((tooltipItem:any) => {
-        tooltipItem.dataset.data.forEach((value:number) => {
+  initCharts() {
+    this.initChart(this.subjectRemoteData, "subjectRemoteChart", "Répartition totale des cours")
+    this.initChart(this.subjectRemoteDataNotDone, "subjectRemoteNotDoneChart", "Cours à venir")
+    this.initChart(this.subjectRemoteDataDone, "subjectRemoteDoneChart", "Cours terminé")
+    this.assiduityChart()
+  }
+
+  initChart(data: any, canvasId: string, title: string) {
+    if (data.length < 1) {
+      $('#' + canvasId).hide()
+      return
+    }
+    const footer = (tooltipItems: any) => {
+      var sum = 0
+      tooltipItems.forEach((tooltipItem: any) => {
+        tooltipItem.dataset.data.forEach((value: number) => {
           sum = (+sum + +value)
-          console.log(sum)
         })
-      });
-      return 'Heures total: ' + sum + 'h';
-    };
+      })
+      return 'Heures total: ' + sum + 'h'
+    }
 
-    var myChart = new Chart("subjectStatusChart", {
+    return new Chart(canvasId, {
       type: 'pie',
       data: {
-        labels: this.subjectStatusData.map((item:any) => item.name + ' ' + item.value + 'h'),
+        labels: data.map((item: any) => item.name + ' ' + item.value + 'h'),
         datasets: [{
-          label: '# of Votes',
-          data: this.subjectStatusData.map((item:any) => item.value),
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-          ],
-          borderColor: [
-            'rgba(255,99,132,1)',
-            'rgba(54, 162, 235, 1)',
-          ],
+          data: data.map((item: any) => item.value),
+          backgroundColor: data.map((item: any) => {
+            if (item.name == this.inPlaceLabel)
+              return this.backgroundColorInPlace
+            else return this.backgroundColorRemote
+          }),
+          borderColor: data.map((item: any) => {
+            if (item.name == this.inPlaceLabel)
+              return this.borderColorInPlace
+            else return this.borderColorRemote
+          }),
           borderWidth: 1
         }]
       },
       options: {
+        // responsive: false,
         plugins: {
           title: {
             display: true,
-            text: 'Répartition totale du cours: ' + this.planning.subject_name + ' - ' + this.planning.subclass_name
+            text: title
           },
           tooltip: {
             callbacks: {
@@ -88,24 +122,43 @@ export class PlanningChartComponent implements OnInit {
           }
         }
       },
-    });
+    })
   }
 
-
-  async fetchApiData() {
-    try {
-      const data = await Promise.all([
-        this.resourceService.getPromise(this.resourceService.findAll('charts/subject/remote/' + this.planning.subject_id)),
-        this.resourceService.getPromise(this.resourceService.findAll('charts/subject/status/' + this.planning.subject_id))
-      ])
-      this.subjectStatusData = await data[0].map((item: any) => ({
-        name: item.is_remote ? 'Distanciel' : 'Présentiel',
-        value: item.hours
-      } as ChartData))
-      this.pieChartReady = Promise.resolve(true)
-    } catch (error) {
-      this.errorService.handleError(error, this.spinner.name)
-    }
+  assiduityChart() {
+    return new Chart("assiduityChart", {
+      type: 'bar',
+      data: {
+        labels: ['Risk Level'], datasets: [
+          {
+            label: 'Low',
+            data: [67.8],
+            backgroundColor: '#D6E9C6' // green
+          },
+          {
+            label: 'Moderate',
+            data: [20.7],
+            backgroundColor: '#FAEBCC' // yellow
+          },
+          {
+            label: 'High',
+            data: [11.4],
+            backgroundColor: '#EBCCD1' // red
+          }
+        ]
+      },
+      options: {
+        indexAxis: 'y',
+        scales: {
+          x: {
+            stacked: true,
+          },
+          y: {
+            stacked: true
+          }
+        }
+      }
+    })
   }
 
 }

@@ -1,12 +1,22 @@
-<div class="row">
+<div class="row position-relative">
+  <ngx-spinner [fullScreen]="false" name="chart-spinner" bdColor="rgba(255, 255, 255, .2)" size="default" color="gray"
+    type="cube-transition">
+    <p class="text-dark mt-5">Géneration des graphes ...</p>
+  </ngx-spinner>
   <div class="col-md-6">
-    <div class="row">
-      <div class="col-md-6"><canvas id="subjectStatusChart"></canvas></div>
-      <div class="col-md-6"></div>
-    </div>
-
+    <canvas id="assiduityChart" height="{{canvasHeight / 2}}"></canvas>
   </div>
   <div class="col-md-6">
-
+    <div class="row">
+      <div class="col-md-4 col-lg-4 col-sm-4">
+        <canvas id="subjectRemoteNotDoneChart" height="{{canvasHeight / 2}}"></canvas>
+      </div>
+      <div class="col-md-4 col-lg-4 col-sm-4">
+        <canvas id="subjectRemoteDoneChart" height="{{canvasHeight / 2}}"></canvas>
+      </div>
+      <div class="col-md-4 col-lg-4 col-sm-4">
+        <canvas id="subjectRemoteChart" height="{{canvasHeight}}"></canvas>
+      </div>
+    </div>
   </div>
 </div>
