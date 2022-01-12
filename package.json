@@ -41,6 +41,7 @@
     "html2pdf.js": "^0.10.1",
     "jquery": "^3.6.0",
     "jspdf": "^2.5.0",
+    "jspdf-autotable": "^3.5.23",
     "ngx-spinner": "^13.0.0",
     "ngx-toastr": "^14.2.1",
     "path": "^0.12.7",

@@ -7,7 +7,8 @@ import { Planning } from '../../../services/interfaces'
 import { ActivatedRoute } from '@angular/router'
 import { FormBuilder, FormArray } from '@angular/forms'
 import { ToastService } from '../../../services/toast.service'
-import jsPDF from 'jspdf'
+// @ts-ignore
+import * as html2pdf from 'html2pdf.js';
 
 @Component({
   selector: 'app-pointing',
@@ -217,25 +218,28 @@ export class PointingComponent implements OnInit {
   }
 
   async openPDF() {
-    let PDF = new jsPDF('p', 'mm', 'a4')
-    const defaultFontSize = (PDF.getFontSize() / 2) + 5
-    var pageHeight = PDF.internal.pageSize.height || PDF.internal.pageSize.getHeight()
-    var pageWidth = PDF.internal.pageSize.width || PDF.internal.pageSize.getWidth()
-    const title = this.innerHTML("#title")
-    var planningDate = this.innerHTML("#planning-date") + ' - ' + this.innerHTML("#planning-hour")
-    planningDate = planningDate.charAt(0).toUpperCase() + planningDate.slice(1)
-    PDF.setFontSize(defaultFontSize + 6)
-    var x = pageWidth / 2
-    var y = 12
-    PDF.text(title, x, y, { align: 'center' })
-    PDF.setFontSize(defaultFontSize - 2)
-    y += 6
-    PDF.text(planningDate, x, y, { align: 'center' })
-    PDF.setFontSize(defaultFontSize - 2)
-    y += 6
-    var course = (this.innerHTML("#course-name") + ' - ' + this.innerHTML("#professor-name")).toUpperCase()
-    PDF.text(course, x, y, { align: 'center' })
-
-    PDF.save('demo.pdf')
+    var element = document.getElementById('presence');
+    const outputName = 'Presence_' + this.planning.subclass_name + '_' + this.planning.planning_date +
+      '_' + this.planning.start + '-' + this.planning.end;
+    await html2pdf()
+      .from(element)
+      .set({
+        margin: [10, 5, 10, 5],
+        image: {
+          type: 'jpeg',
+          quality: 1
+        },
+        jsPDF: {
+          unit: 'mm',
+          format: 'A4',
+          orientation: 'landscape'
+        },
+        enableLinks: true,
+        pageBreak: {
+          mode: ['avoid-all']
+        }
+      })
+      .save(outputName);
+      this.toastService.show('Pointage étudiant', 'Fiche de présence téléchargé.', 'info')
   }
 }
