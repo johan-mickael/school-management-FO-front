@@ -40,8 +40,8 @@ export class ClassesComponent implements OnInit {
     await this.spinnerService.show("class-spinner");
     try {
       const data = await Promise.all([
-        this.resourceService.getPromise(this.resourceService.findAll('classes/')),
-        this.resourceService.getPromise(this.resourceService.findAll('subclasses/'))
+        this.resourceService.getPromise(this.resourceService.findAll('classes')),
+        this.resourceService.getPromise(this.resourceService.findAll('subclasses'))
       ])
       this.classes = [this.classes[0], ...data[0] as Class[]]
       this.subclasses = data[1] as Subclass[]
