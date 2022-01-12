@@ -133,8 +133,6 @@ export class PlanningChartComponent implements OnInit {
 
     return new Chart("assiduityChart", {
       type: 'bar',
-      barThickness: '20px',
-      tooltipTemplate: "<%= value %> Files",
       data: {
         labels: this.students.map((student: any) => {
           const name = student.first_name as string
@@ -146,14 +144,12 @@ export class PlanningChartComponent implements OnInit {
             data: this.studentAssiduity.map((assiduity: any) => assiduity.assisting_duration),
             backgroundColor: '#a6ffac',
             stack: this.assiduityStack,
-            barThickness: this.barThickness,
           },
           {
             label: this.absentLabel,
             data: this.studentAssiduity.map((assiduity: any) => assiduity.non_assisting_duration),
             backgroundColor: '#ffad91',
             stack: this.assiduityStack,
-            barThickness: this.barThickness,
           },
           {
             label: this.remainingLabel,
@@ -162,21 +158,18 @@ export class PlanningChartComponent implements OnInit {
             }),
             backgroundColor: '#e3e3e3',
             stack: this.assiduityStack,
-            barThickness: this.barThickness,
           },
           {
             label: this.inPlaceLabel,
             data: this.studentAssiduity.map((assiduity: any) => assiduity.assisting_duration_class),
             backgroundColor: this.backgroundColorInPlace,
             stack: this.placeStack,
-            barThickness: this.barThickness,
           },
           {
             label: this.remoteLabel,
             data: this.studentAssiduity.map((assiduity: any) => assiduity.assisting_duration_remote),
             backgroundColor: this.backgroundColorRemote,
             stack: this.placeStack,
-            barThickness: this.barThickness,
           }
         ]
       },
@@ -185,21 +178,11 @@ export class PlanningChartComponent implements OnInit {
         scales: {
           x: {
             stacked: true,
-            barPercentage: 0.1
           },
           y: {
             stacked: true,
-            barThickness: 6,
           }
-        },
-        tooltips: {
-          mode: 'label',
-          callbacks: {
-            label: function (t:any, d:any) {
-              console.log('aaa')
-            }
-          }
-        },
+        }
       }
     })
   }
