@@ -22,8 +22,8 @@ export class PlanningChartComponent implements OnInit {
   @Input() students: any
   inPlaceLabel: string = 'Présenciel'
   remoteLabel: string = 'Distanciel'
-  presentLabel :string = 'Assisté'
-  absentLabel:string = 'Non assisté'
+  presentLabel: string = 'Assisté'
+  absentLabel: string = 'Non assisté'
   remainingLabel: string = 'Heures restantes'
   assiduityStack: string = 'sf1e8tvyd32798g1ervdfg56r8546d'
   placeStack: string = 'au87513d8fef98g1ervdfg56r8546d'
@@ -37,6 +37,7 @@ export class PlanningChartComponent implements OnInit {
   backgroundColorInPlace: string = '#c6adff'
   backgroundColorRemote: string = '#ffe97a'
   canvasHeight: number = 300
+  barThickness: number = 40
 
   async ngOnInit() {
     this.spinnerService.show('chart-spinner')
@@ -135,6 +136,7 @@ export class PlanningChartComponent implements OnInit {
   assiduityChart() {
     return new Chart("assiduityChart", {
       type: 'bar',
+      barThickness: '20px',
       data: {
         labels: this.students.map((student: any) => {
           const name = student.first_name as string
@@ -145,13 +147,15 @@ export class PlanningChartComponent implements OnInit {
             label: this.presentLabel,
             data: this.studentAssiduity.map((assiduity: any) => assiduity.assisting_duration),
             backgroundColor: '#a6ffac',
-            stack: this.assiduityStack
+            stack: this.assiduityStack,
+            barThickness: this.barThickness,
           },
           {
             label: this.absentLabel,
             data: this.studentAssiduity.map((assiduity: any) => assiduity.non_assisting_duration),
             backgroundColor: '#ffad91',
-            stack: this.assiduityStack
+            stack: this.assiduityStack,
+            barThickness: this.barThickness,
           },
           {
             label: this.remainingLabel,
@@ -159,19 +163,22 @@ export class PlanningChartComponent implements OnInit {
               return this.totalHours - (+assiduity.assisting_duration + +assiduity.non_assisting_duration)
             }),
             backgroundColor: '#e3e3e3',
-            stack: this.assiduityStack
+            stack: this.assiduityStack,
+            barThickness: this.barThickness,
           },
           {
             label: this.inPlaceLabel,
             data: this.studentAssiduity.map((assiduity: any) => assiduity.assisting_duration_class),
             backgroundColor: this.backgroundColorInPlace,
-            stack: this.placeStack
+            stack: this.placeStack,
+            barThickness: this.barThickness,
           },
           {
             label: this.remoteLabel,
             data: this.studentAssiduity.map((assiduity: any) => assiduity.assisting_duration_remote),
             backgroundColor: this.backgroundColorRemote,
-            stack: this.placeStack
+            stack: this.placeStack,
+            barThickness: this.barThickness,
           }
         ]
       },
@@ -180,9 +187,11 @@ export class PlanningChartComponent implements OnInit {
         scales: {
           x: {
             stacked: true,
+            barPercentage: 0.1
           },
           y: {
-            stacked: true
+            stacked: true,
+            barThickness: 6,
           }
         }
       }
