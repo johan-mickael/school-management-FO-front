@@ -19,17 +19,23 @@ export class PlanningChartComponent implements OnInit {
   ) { }
 
   @Input() planning: Planning
+  @Input() students: any
   inPlaceLabel: string = 'Présenciel'
   remoteLabel: string = 'Distanciel'
-  subjectRemoteData: any = []
-  subjectRemoteDataDone: any = []
-  subjectRemoteDataNotDone: any = []
+  presentLabel :string = 'Assisté'
+  absentLabel:string = 'Non assisté'
+  remainingLabel: string = 'Heures restantes'
+  assiduityStack: string = 'sf1e8tvyd32798g1ervdfg56r8546d'
+  placeStack: string = 'au87513d8fef98g1ervdfg56r8546d'
+  subjectRemoteData: ChartData[]
+  subjectRemoteDataDone: ChartData[]
+  subjectRemoteDataNotDone: ChartData[]
+  totalHours: number
+  studentAssiduity: any
   chartsBarHorizontalStackedReady: Promise<boolean>
   pieChartReady: Promise<boolean>
-  borderColorInPlace: string = '#D6E9C6'
-  backgroundColorInPlace: string = '#D6E9C6'
-  borderColorRemote: string = '#b0cce9'
-  backgroundColorRemote: string = '#b0cce9'
+  backgroundColorInPlace: string = '#c6adff'
+  backgroundColorRemote: string = '#ffe97a'
   canvasHeight: number = 300
 
   async ngOnInit() {
@@ -42,14 +48,16 @@ export class PlanningChartComponent implements OnInit {
   async fetchApiData() {
     try {
       const data = await Promise.all([
-        this.resourceService.getPromise(this.resourceService.findAll('charts/subject/remote/' + this.planning.subject_id)),
-        this.resourceService.getPromise(this.resourceService.findAll('charts/subject/remote/' + this.planning.subject_id + '/0')),
-        this.resourceService.getPromise(this.resourceService.findAll('charts/subject/remote/' + this.planning.subject_id + '/2')),
+        this.resourceService.getPromise(this.resourceService.findAll('charts/subjects/remote/' + this.planning.subject_id + '/' + this.planning.schoolyear_id)),
+        this.resourceService.getPromise(this.resourceService.findAll('charts/subjects/remote/' + this.planning.subject_id + '/' + this.planning.schoolyear_id + '/0')),
+        this.resourceService.getPromise(this.resourceService.findAll('charts/subjects/remote/' + this.planning.subject_id + '/' + this.planning.schoolyear_id + '/2')),
+        this.resourceService.getPromise(this.resourceService.findAll('charts/students/assisting/' + this.planning.subject_id + '/' + this.planning.schoolyear_id))
       ])
       this.subjectRemoteData = await data[0].map((item: any) => ({
         name: item.is_remote ? this.remoteLabel : this.inPlaceLabel,
         value: item.hours
       } as ChartData))
+      this.totalHours = this.subjectRemoteData.reduce((sum, current) => +sum + +current.value, 0)
       this.subjectRemoteDataNotDone = await data[1].map((item: any) => ({
         name: item.is_remote ? this.remoteLabel : this.inPlaceLabel,
         value: item.hours
@@ -58,6 +66,8 @@ export class PlanningChartComponent implements OnInit {
         name: item.is_remote ? this.remoteLabel : this.inPlaceLabel,
         value: item.hours
       } as ChartData))
+      this.studentAssiduity = await data[3]
+      console.log(this.studentAssiduity)
       this.pieChartReady = Promise.resolve(true)
     } catch (error) {
       this.errorService.handleError(error, "chart-spinner")
@@ -89,7 +99,7 @@ export class PlanningChartComponent implements OnInit {
     return new Chart(canvasId, {
       type: 'pie',
       data: {
-        labels: data.map((item: any) => item.name + ' ' + item.value + 'h'),
+        labels: data.map((item: any) => item.name + ' ' + (item.value | 0) + 'h'),
         datasets: [{
           data: data.map((item: any) => item.value),
           backgroundColor: data.map((item: any) => {
@@ -99,8 +109,8 @@ export class PlanningChartComponent implements OnInit {
           }),
           borderColor: data.map((item: any) => {
             if (item.name == this.inPlaceLabel)
-              return this.borderColorInPlace
-            else return this.borderColorRemote
+              return this.backgroundColorInPlace
+            else return this.backgroundColorRemote
           }),
           borderWidth: 1
         }]
@@ -126,21 +136,42 @@ export class PlanningChartComponent implements OnInit {
     return new Chart("assiduityChart", {
       type: 'bar',
       data: {
-        labels: ['Risk Level'], datasets: [
+        labels: this.students.map((student: any) => {
+          const name = student.first_name as string
+          return name[0].toUpperCase() + name.slice(1)
+        }),
+        datasets: [
           {
-            label: 'Low',
-            data: [67.8],
-            backgroundColor: '#D6E9C6' // green
+            label: this.presentLabel,
+            data: this.studentAssiduity.map((assiduity: any) => assiduity.assisting_duration),
+            backgroundColor: '#a6ffac',
+            stack: this.assiduityStack
           },
           {
-            label: 'Moderate',
-            data: [20.7],
-            backgroundColor: '#FAEBCC' // yellow
+            label: this.absentLabel,
+            data: this.studentAssiduity.map((assiduity: any) => assiduity.non_assisting_duration),
+            backgroundColor: '#ffad91',
+            stack: this.assiduityStack
           },
           {
-            label: 'High',
-            data: [11.4],
-            backgroundColor: '#EBCCD1' // red
+            label: this.remainingLabel,
+            data: this.studentAssiduity.map((assiduity: any) => {
+              return this.totalHours - (+assiduity.assisting_duration + +assiduity.non_assisting_duration)
+            }),
+            backgroundColor: '#e3e3e3',
+            stack: this.assiduityStack
+          },
+          {
+            label: this.inPlaceLabel,
+            data: this.studentAssiduity.map((assiduity: any) => assiduity.assisting_duration_class),
+            backgroundColor: this.backgroundColorInPlace,
+            stack: this.placeStack
+          },
+          {
+            label: this.remoteLabel,
+            data: this.studentAssiduity.map((assiduity: any) => assiduity.assisting_duration_remote),
+            backgroundColor: this.backgroundColorRemote,
+            stack: this.placeStack
           }
         ]
       },

@@ -57,7 +57,6 @@ export class PointingComponent implements OnInit {
   done: boolean | string
   title: string
 
-
   ngOnInit(): void {
     this.subscription = this.errorService.errorMessage.subscribe(message => this.message = message)
     this.spinnerService.show("pointing-spinner")
@@ -160,9 +159,18 @@ export class PointingComponent implements OnInit {
       this.presenceForm.value.presences[index].is_present = true
     }
     else if (values.currentTarget.value < this.planning.start) {
+      setTimeout(() => {
+        this.presenceForm.value.presences[index].is_present = true
+      }, 0)
       this.presenceForm.value.presences[index].arriving_time = this.planning.start
-    } else if (values.currentTarget.value > this.planning.end) {
-      this.presenceForm.value.presences[index].arriving_time = this.planning.end
+    } else if (values.currentTarget.value >= this.planning.end) {
+      setTimeout(() => {
+        this.presenceForm.value.presences[index].is_present = false
+      }, 0)
+      setTimeout(() => {
+        this.presenceForm.value.presences[index].is_present_class = false
+      }, 0)
+      this.presenceForm.value.presences[index].arriving_time = null
     }
     const is_late = this.presenceForm.value.presences[index].arriving_time > this.planning.start
     setTimeout(() => {

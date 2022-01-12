@@ -33,6 +33,7 @@ export interface Planning {
   planning_date: string,
   start: string,
   end: string,
+  schoolyear_id: number,
   is_remote: number,
   description: string,
   status: number,
