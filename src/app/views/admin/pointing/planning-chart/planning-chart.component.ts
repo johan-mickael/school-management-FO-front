@@ -87,20 +87,11 @@ export class PlanningChartComponent implements OnInit {
       $('#' + canvasId).hide()
       return
     }
-    const footer = (tooltipItems: any) => {
-      var sum = 0
-      tooltipItems.forEach((tooltipItem: any) => {
-        tooltipItem.dataset.data.forEach((value: number) => {
-          sum = (+sum + +value)
-        })
-      })
-      return 'Heures total: ' + sum + 'h'
-    }
 
     return new Chart(canvasId, {
       type: 'pie',
       data: {
-        labels: data.map((item: any) => item.name + ' ' + (item.value | 0) + 'h'),
+        labels: data.map((item: any) => item.name),
         datasets: [{
           data: data.map((item: any) => item.value),
           backgroundColor: data.map((item: any) => {
@@ -125,7 +116,9 @@ export class PlanningChartComponent implements OnInit {
           },
           tooltip: {
             callbacks: {
-              footer: footer
+              label: function (tooltipItem: any, data: any) {
+                return ' ' + tooltipItem.parsed + 'h en ' + (tooltipItem.label as string).toLowerCase()
+              }
             }
           }
         }
@@ -134,9 +127,14 @@ export class PlanningChartComponent implements OnInit {
   }
 
   assiduityChart() {
+    const label = (tooltipItems: any, data: any) => {
+      return tooltipItems.xLabel
+    }
+
     return new Chart("assiduityChart", {
       type: 'bar',
       barThickness: '20px',
+      tooltipTemplate: "<%= value %> Files",
       data: {
         labels: this.students.map((student: any) => {
           const name = student.first_name as string
@@ -193,7 +191,15 @@ export class PlanningChartComponent implements OnInit {
             stacked: true,
             barThickness: 6,
           }
-        }
+        },
+        tooltips: {
+          mode: 'label',
+          callbacks: {
+            label: function (t:any, d:any) {
+              console.log('aaa')
+            }
+          }
+        },
       }
     })
   }
