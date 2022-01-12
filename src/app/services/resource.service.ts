@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 export class ResourceService {
 
   constructor(private httpClient: HttpClient) { }
-  readonly url: string = 'http://localhost:8000/api/';
-  // readonly url: string = 'https://jmschoolapi.herokuapp.com/api/';
+  // readonly url: string = 'http://localhost:8000/api/';
+  readonly url: string = 'https://jmschoolapi.herokuapp.com/api/';
 
   options = {
     headers: {
