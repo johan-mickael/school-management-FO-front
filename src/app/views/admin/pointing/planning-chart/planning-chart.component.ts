@@ -182,7 +182,8 @@ export class PlanningChartComponent implements OnInit {
           y: {
             ticks: {
               autoSkip: false
-            }
+            },
+
           }
         }
       }

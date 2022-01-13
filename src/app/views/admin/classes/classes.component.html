@@ -1,8 +1,6 @@
 <div class="p-3 position-relative min-vh-100">
   <ngx-spinner [fullScreen]="false" name="class-spinner" bdColor="rgba(255, 255, 255, .8)" size="medium"
     color="#343a40" type="square-jelly-box">Chargement des classes ...</ngx-spinner>
-  <ngx-spinner [fullScreen]="false" name="student-spinner" bdColor="rgba(255, 255, 255, .8)" size="medium"
-    color="#343a40" type="square-jelly-box">Chargement des étudiants ...</ngx-spinner>
   <div *ngIf="dataLoaded | async">
     <div class="form mb-3">
       <label class="form-label">Choisir les classes</label>
@@ -12,10 +10,11 @@
       </select>
     </div>
     <div class="row">
-      <app-subclass (click)="selectedSubclassId = subclass.id" class="col-md-3 col-sm-4 col-12"
+      <app-subclass (click)="selectedSubclassId = subclass.id" class="col-xl-3 col-lg-3 col-md-4 col-sm-6"
         *ngFor="let subclass of subclasses" [subclass]="subclass" [selected]="selectedSubclassId === subclass.id">
       </app-subclass>
     </div>
+    <hr>
     <div id="students" >
       <app-students [subclassId]="selectedSubclassId"></app-students>
     </div>

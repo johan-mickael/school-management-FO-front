@@ -25,6 +25,7 @@ export class StudentsComponent implements OnInit, OnChanges {
   schoolYears: SchoolYear[];
   students: Student[];
   dataLoaded: Promise<boolean>;
+  loadingCount: number = 0
 
   dtOptions = {
     pagingType: 'full_numbers',
@@ -34,10 +35,11 @@ export class StudentsComponent implements OnInit, OnChanges {
 
   async ngOnInit() {
     await this.fetchApiData();
-    this.dataLoaded = Promise.resolve(true);
   }
 
   async ngOnChanges(changes: SimpleChanges) {
+    this.loadingCount ++
+    if (this.loadingCount == 1) return;
     this.getStudents()
   }
 
@@ -52,6 +54,7 @@ export class StudentsComponent implements OnInit, OnChanges {
         this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.schoolYearId))
       )
       this.students = data as Student[]
+      this.dataLoaded = Promise.resolve(true)
       await this.spinnerService.hide('student-spinner');
     } catch (error) {
       this.errorService.handleError(error, 'student-spinner');
@@ -59,6 +62,7 @@ export class StudentsComponent implements OnInit, OnChanges {
   }
 
   async fetchApiData() {
+    await this.spinnerService.show('student-spinner');
     try {
       this.schoolYears = await Promise.resolve(
         this.resourceService.getPromise(this.resourceService.findAll('schoolyears'))
@@ -68,7 +72,7 @@ export class StudentsComponent implements OnInit, OnChanges {
         this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.schoolYearId))
       )
       this.dataLoaded = Promise.resolve(true)
-      await this.spinnerService.hide('student-spinner');
+      this.spinnerService.hide('student-spinner');
     } catch (error) {
       this.errorService.handleError(error, 'student-spinner');
     }

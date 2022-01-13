@@ -1,4 +1,8 @@
 <div class="position-relative">
+  <ngx-spinner [fullScreen]="false" name="student-spinner" bdColor="rgba(255, 255, 255, .6)" size="medium"
+    color="#343a40" type="ball-scale-ripple">
+    <p class="mt-5">Chargement des étudiants ...</p>
+  </ngx-spinner>
   <div *ngIf="dataLoaded | async">
     <div class="form mb-3">
       <label class="form-label">Année scolaire</label>
@@ -35,7 +39,7 @@
               </td>
               <td>{{student.first_name}}</td>
               <td>
-                {{student.last_name}}
+                {{student.last_name | uppercase}}
               </td>
               <td>
                 {{student.description}}
