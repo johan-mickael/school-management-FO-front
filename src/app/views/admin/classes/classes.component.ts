@@ -30,10 +30,10 @@ export class ClassesComponent implements OnInit {
   message: string = '';
   subscription: Subscription = new Subscription;
   dataLoaded: Promise<boolean>;
-  selectedSubclassId: number;
+  selectedSubclass: Subclass;
 
   async ngOnInit() {
-    this.fetchApiData()
+    await this.fetchApiData()
   }
 
   async fetchApiData() {
@@ -45,7 +45,7 @@ export class ClassesComponent implements OnInit {
       ])
       this.classes = [this.classes[0], ...data[0] as Class[]]
       this.subclasses = data[1] as Subclass[]
-      this.selectedSubclassId = this.subclasses[0].id
+      this.selectedSubclass = this.subclasses[0]
       this.dataLoaded = Promise.resolve(true)
       await this.spinnerService.hide('class-spinner');
     } catch (error) {
@@ -57,7 +57,7 @@ export class ClassesComponent implements OnInit {
     await this.spinnerService.show("class-spinner")
     try {
       this.subclasses = await this.resourceService.getPromise(this.resourceService.findOne('subclasses', this.selectedClass)) as Subclass[]
-      this.selectedSubclassId = this.subclasses[0].id
+      this.selectedSubclass = this.subclasses[0]
       this.spinnerService.hide("class-spinner")
     } catch (error) {
       this.errorService.handleError(error, "class-spinner")

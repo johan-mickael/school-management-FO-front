@@ -68,7 +68,6 @@ export class PlanningChartComponent implements OnInit {
         value: item.hours
       } as ChartData))
       this.studentAssiduity = await data[3]
-      console.log(this.studentAssiduity)
       this.pieChartReady = Promise.resolve(true)
     } catch (error) {
       this.errorService.handleError(error, "chart-spinner")

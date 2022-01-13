@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { ResourceService } from '../../../../services/resource.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ErrorService } from '../../../../services/error.service';
-import { SchoolYear, Student } from '../../../../services/interfaces';
+import { SchoolYear, Student, Subclass } from '../../../../services/interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -20,8 +20,9 @@ export class StudentsComponent implements OnInit, OnChanges {
     private router: Router
   ) { }
 
-  @Input() subclassId: number;
+  @Input() subclass: Subclass;
   schoolYearId: number;
+  selectedSchoolyear: SchoolYear;
   schoolYears: SchoolYear[];
   students: Student[];
   dataLoaded: Promise<boolean>;
@@ -44,6 +45,9 @@ export class StudentsComponent implements OnInit, OnChanges {
   }
 
   async onSchoolYearChange() {
+    this.selectedSchoolyear = this.schoolYears.filter(schoolYear => {
+      return schoolYear.id == this.schoolYearId
+    })[0]
     this.getStudents()
   }
 
@@ -51,7 +55,7 @@ export class StudentsComponent implements OnInit, OnChanges {
     await this.spinnerService.show('student-spinner');
     try {
       const data = await Promise.resolve(
-        this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.schoolYearId))
+        this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclass.id + '/' + this.schoolYearId))
       )
       this.students = data as Student[]
       this.dataLoaded = Promise.resolve(true)
@@ -68,8 +72,11 @@ export class StudentsComponent implements OnInit, OnChanges {
         this.resourceService.getPromise(this.resourceService.findAll('schoolyears'))
       ) as SchoolYear[]
       this.schoolYearId = this.schoolYears[0].id
+      this.selectedSchoolyear = this.schoolYears.filter(schoolYear => {
+        return schoolYear.id == this.schoolYearId
+      })[0]
       this.students = await Promise.resolve(
-        this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclassId + '/' + this.schoolYearId))
+        this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclass.id + '/' + this.schoolYearId))
       )
       this.dataLoaded = Promise.resolve(true)
       this.spinnerService.hide('student-spinner');

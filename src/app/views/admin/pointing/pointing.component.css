@@ -3,12 +3,6 @@
   color: white;
 }
 
-.status {
-  font-size: 1rem;
-  text-transform: capitalize;
-  opacity: .9;
-}
-
 #presence {
   overflow-x: auto;
   padding: 2px!important;
