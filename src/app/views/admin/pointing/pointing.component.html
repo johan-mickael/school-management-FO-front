@@ -30,7 +30,7 @@
         </div>
 
         <div class="card-body table-responsive p-0" id="presence" formArrayName="presences">
-          <table id="studentPresenceTable" class="table border text-nowrap" style="page-break-inside:always;">
+          <table id="studentPresenceTable" class="table border text-nowrap table-sm" style="page-break-inside:always;">
             <tbody>
               <tr id="planning-informations" style="background-color: aliceblue;">
                 <th class="text-right" rowspan="2" colspan="1">
@@ -61,14 +61,15 @@
                   <th class="text-center">Heure d'arrivée</th>
                   <th class="text-right">Commentaires</th>
                 </tr>
-                <tr *ngFor="let student of students; let index = index"
-                  style="background-color: white;  page-break-inside:avoid; page-break-after:auto;"
-                  formGroupName="{{index}}">
+                <tr *ngFor="let student of students; let index = index" formGroupName="{{index}}" class="table-row" [ngClass]="{'is-remote': student.is_remote}">
                   <input type="hidden" formControlName="student_id" [(ngModel)]="student.student_id" />
                   <input type="hidden" formControlName="planning_id" [(ngModel)]="planning.id" />
                   <input type="hidden" formControlName="subject_id" [(ngModel)]="planning.subject_id" />
-                  <td class="text-capitalize border"><a href="">{{ [student.first_name, student.last_name] | concatPipe
-                      }}</a>
+                  <td class="text-capitalize border text-dark">
+                    <span>
+                      {{ [student.first_name, student.last_name] | concatPipe }}
+                      <i *ngIf="student.is_remote" class="fas fa-desktop text-sm ml-1"></i>
+                    </span>
                   </td>
                   <td class="text-center border">
                     <div class="icheck-success d-inline">
@@ -99,11 +100,11 @@
                   <td class="border p-0">
                     <input type="time" class="form-control border-0 text-center" formControlName="arriving_time"
                       [readonly]="done" [(ngModel)]="presenceForm.value.presences[index].arriving_time"
-                      (change)="onArrivingTimeChange(index, $event)" />
+                      (change)="onArrivingTimeChange(index, $event)" [ngClass]="{'is-remote': student.is_remote}"/>
                   </td>
                   <td class="border p-0">
                     <textarea class="form-control border-0" rows="2" formControlName="comment"
-                      [readonly]="done"></textarea>
+                      [readonly]="done" [ngClass]="{'is-remote': student.is_remote}"></textarea>
                   </td>
                 </tr>
               </div>
@@ -112,7 +113,7 @@
           <ng-template #noStudentAlert>
             <td class="alert alert-warning text-center" role="alert" colspan="6">
               <i class="fas fa-exclamation-circle"></i>
-              <b> Aucun étudiant dans cette classe.</b>
+              <b>Aucun étudiant dans cette classe.</b>
             </td>
           </ng-template>
         </div>

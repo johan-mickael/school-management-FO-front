@@ -24,7 +24,7 @@ export class StudentsComponent implements OnInit, OnChanges {
   schoolYearId: number;
   selectedSchoolyear: SchoolYear;
   schoolYears: SchoolYear[];
-  students: Student[];
+  students: any;
   dataLoaded: Promise<boolean>;
   loadingCount: number = 0
 

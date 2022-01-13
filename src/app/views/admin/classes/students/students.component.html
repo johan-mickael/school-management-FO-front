@@ -1,5 +1,5 @@
 <div class="position-relative">
-  <ngx-spinner [fullScreen]="false" name="student-spinner" bdColor="rgba(255, 255, 255, .6)" size="medium"
+  <ngx-spinner [fullScreen]="false" name="student-spinner" bdColor="rgba(255, 255, 255, .8)" size="medium"
     color="#343a40" type="ball-scale-ripple">
     <p class="text-dark mt-5 text-bold">Chargement des étudiants ...</p>
   </ngx-spinner>
@@ -20,12 +20,13 @@
         </div>
       </div>
       <div class="card-body table-responsive p-0">
-        <table *ngIf="students.length > 0; else noStudentAlert"  class="table table-striped table-valign-middle">
+        <table *ngIf="students.length > 0; else noStudentAlert"  class="table table-striped table-valign-middle table-sm">
           <thead>
             <tr>
               <th></th>
               <th>Prénoms</th>
               <th>Noms</th>
+              <th>Statut</th>
               <th>Description</th>
             </tr>
           </thead>
@@ -37,6 +38,10 @@
               <td class="text-capitalize">{{ student.first_name }}</td>
               <td class="text-capitalize">
                 {{ student.last_name }}
+              </td>
+              <td>
+                {{student.is_remote ? 'Distanciel' : 'Présenciel'}}
+                <i *ngIf="student.is_remote" class="fas fa-desktop text-sm ml-1"></i>
               </td>
               <td>
                 {{ student.description ? student.description : ' --- '}}
