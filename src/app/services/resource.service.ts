@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ResourceService {
 
-  constructor(private httpClient: HttpClient) { }
-  // readonly url: string = 'http://localhost:8000/api/';
-  readonly url: string = 'https://jmschoolapi.herokuapp.com/api/';
+  constructor(private httpClient: HttpClient) {}
+  readonly url: string = environment.apiUrl;
 
   options = {
     headers: {

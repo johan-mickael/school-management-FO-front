@@ -134,9 +134,12 @@ export class PlanningChartComponent implements OnInit {
     return new Chart("assiduityChart", {
       type: 'bar',
       data: {
-        labels: this.students.map((student: any) => {
-          const name = student.first_name as string
-          return name[0].toUpperCase() + name.slice(1)
+        labels: this.studentAssiduity.map((assiduity: any) => {
+          const student = this.students.filter((student: any) => {
+            if (student.student_id == assiduity.student_id)
+              return student
+          })[0]
+          return (student.first_name as string).charAt(0).toUpperCase() + (student.first_name as string).slice(1)
         }),
         datasets: [
           {
@@ -176,11 +179,10 @@ export class PlanningChartComponent implements OnInit {
       options: {
         indexAxis: 'y',
         scales: {
-          x: {
-            stacked: true,
-          },
           y: {
-            stacked: true,
+            ticks: {
+              autoSkip: false
+            }
           }
         }
       }
