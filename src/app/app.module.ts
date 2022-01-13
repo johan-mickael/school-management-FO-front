@@ -45,10 +45,10 @@ FullCalendarModule.registerPlugins([
     ClassesComponent,
     ErrorpageComponent,
     PointingComponent,
-    ConcatPipe,
     StudentsComponent,
     SubclassComponent,
     PlanningChartComponent,
+    ConcatPipe,
   ],
   imports: [
     BrowserModule,

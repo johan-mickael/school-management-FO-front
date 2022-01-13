@@ -37,12 +37,12 @@
               <td>
                 <img src="assets/img/user.jpg" alt="Product 1" class="img-circle img-size-32 mr-2">
               </td>
-              <td>{{student.first_name}}</td>
-              <td>
-                {{student.last_name | uppercase}}
+              <td class="text-capitalize">{{ student.first_name }}</td>
+              <td class="text-capitalize">
+                {{ student.last_name }}
               </td>
               <td>
-                {{student.description}}
+                {{ student.description ? student.description : ' --- '}}
               </td>
             </tr>
           </tbody>
