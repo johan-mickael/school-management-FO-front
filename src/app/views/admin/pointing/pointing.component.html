@@ -75,7 +75,7 @@
                     <div class="icheck-success d-inline">
                       <input type="checkbox" id="a{{index}}" formControlName="is_present_class"
                         [(ngModel)]="presenceForm.value.presences[index].is_present_class"
-                        (change)="onChangePresentClass(index, $event)" [attr.disabled]="done ? '' : null">
+                        (change)="onChangePresentClass(index, $event)" [attr.disabled]="done || student.is_remote ? '' : null">
                       <label for="a{{index}}">
                       </label>
                     </div>
