@@ -4,6 +4,7 @@ import { Subscription, Observable } from 'rxjs';
 import { ResourceService } from '../../../services/resource.service';
 import { ErrorService } from '../../../services/error.service';
 import { Subclass, Class, SchoolYear } from '../../../services/interfaces';
+import { PageUtils } from 'src/app/utils/pageUtils';
 
 @Component({
   selector: 'app-classes',
@@ -15,7 +16,7 @@ export class ClassesComponent implements OnInit {
   constructor(
     private resourceService: ResourceService,
     private spinnerService: NgxSpinnerService,
-    private errorService: ErrorService
+    private errorService: ErrorService,
   ) { }
 
   selectedClass: number = 0;
@@ -63,4 +64,5 @@ export class ClassesComponent implements OnInit {
       this.errorService.handleError(error, "class-spinner")
     }
   }
+
 }

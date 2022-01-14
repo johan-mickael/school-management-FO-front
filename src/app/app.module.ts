@@ -28,6 +28,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { PlanningChartComponent } from './views/admin/pointing/planning-chart/planning-chart.component';
 import { StudentFormComponent } from './views/admin/classes/students/student-form/student-form.component';
 import { HourPipe } from './pipe/HourPipe';
+import { PageUtils } from './utils/pageUtils';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -70,7 +71,7 @@ FullCalendarModule.registerPlugins([
       closeButton: true,
     }),
   ],
-  providers: [ErrorService, DatePipe],
+  providers: [ErrorService, DatePipe, PageUtils],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

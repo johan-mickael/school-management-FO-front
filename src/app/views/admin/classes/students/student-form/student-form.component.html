@@ -4,29 +4,35 @@
     <div class="widget-user-image">
       <img class="img-circle elevation-2" src="assets/img/user.jpg" alt="User Avatar">
     </div>
-    <h3 class="widget-user-username font-weight-bolder text-capitalize">{{student.first_name }} {{student.last_name}}</h3>
+    <h3 class="widget-user-username font-weight-bolder text-capitalize">{{student.first_name }} {{student.last_name}}
+    </h3>
     <p class="widget-user-desc text-capitalize">{{student.is_remote ? 'à distance' : 'En Présenciel'}}</p>
   </div>
   <div class="card-footer p-0 bg-white">
     <ul class="nav flex-column">
       <li class="nav-item">
         <span href="#" class="nav-link">
-          Heures de cours <span class="float-right badge bg-success">{{studentHours.assisting_duration | HourPipe}}</span>
+          Heures de cours <span class="float-right badge bg-success">{{(studentHours ? studentHours.assisting_duration :
+            0) | HourPipe}}</span>
         </span>
       </li>
       <li class="nav-item">
         <span href="#" class="nav-link">
-          Abscences <span class="float-right badge bg-danger">{{studentHours.non_assisting_duration | HourPipe}}</span>
+          Abscences <span class="float-right badge bg-danger">{{( studentHours ? studentHours.non_assisting_duration: 0)
+            | HourPipe}}</span>
         </span>
       </li>
       <li class="nav-item">
         <span href="#" class="nav-link">
-          En salle <span class="float-right badge bg-purple">{{studentHours.assisting_duration_class | HourPipe}}</span>
+          En salle <span class="float-right badge bg-purple">{{ (studentHours ? studentHours.assisting_duration_class :
+            0) | HourPipe}}</span>
         </span>
       </li>
       <li class="nav-item">
         <span href="#" class="nav-link">
-          A distance <span class="float-right badge bg-warning">{{studentHours.assisting_duration_remote | HourPipe}}</span>
+          A distance <span class="float-right badge bg-warning">{{(studentHours ? studentHours.assisting_duration_remote
+            : 0) |
+            HourPipe}}</span>
         </span>
       </li>
     </ul>

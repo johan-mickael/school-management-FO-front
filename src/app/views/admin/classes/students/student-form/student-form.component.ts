@@ -14,7 +14,6 @@ export class StudentFormComponent implements OnInit, OnChanges {
   loadingCount: number
 
   ngOnInit(): void {
-    console.log(this.studentHours)
   }
 
   ngOnChanges(changes: SimpleChanges): void {

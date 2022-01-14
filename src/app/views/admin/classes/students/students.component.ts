@@ -3,6 +3,7 @@ import { ResourceService } from '../../../../services/resource.service'
 import { NgxSpinnerService } from 'ngx-spinner'
 import { ErrorService } from '../../../../services/error.service'
 import { SchoolYear, Subclass } from '../../../../services/interfaces'
+import { PageUtils } from '../../../../utils/pageUtils';
 @Component({
   selector: 'app-students',
   templateUrl: './students.component.html',
@@ -14,6 +15,7 @@ export class StudentsComponent implements OnInit, OnChanges {
     private resourceService: ResourceService,
     private spinnerService: NgxSpinnerService,
     private errorService: ErrorService,
+    public pageUtils: PageUtils
   ) { }
 
   @Input() subclass: Subclass
@@ -40,6 +42,7 @@ export class StudentsComponent implements OnInit, OnChanges {
     this.loadingCount++
     if (this.loadingCount == 1) return
     await this.getStudents()
+    this.pageUtils.scroll('students')
     this.spinnerService.hide('student-spinner')
   }
   async onSchoolYearChange() {

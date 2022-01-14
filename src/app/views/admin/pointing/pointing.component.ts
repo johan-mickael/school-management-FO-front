@@ -9,6 +9,7 @@ import { FormBuilder, FormArray } from '@angular/forms'
 import { ToastService } from '../../../services/toast.service'
 // @ts-ignore
 import * as html2pdf from 'html2pdf.js';
+import { PageUtils } from '../../../utils/pageUtils';
 
 @Component({
   selector: 'app-pointing',
@@ -24,6 +25,7 @@ export class PointingComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastService: ToastService,
+    public pageUtils: PageUtils
   ) { }
 
   presenceForm = this.formBuilder.group({
