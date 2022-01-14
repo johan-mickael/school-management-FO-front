@@ -1,135 +1,139 @@
-<div class="position-relative min-vh-100 p-3">
-  <ngx-spinner [fullScreen]="false" name="pointing-spinner" bdColor="rgba(51,51,51,0.5)" size="medium" color="#343a40"
-    type="line-scale">
-    <p class="text-dark text-bold mt-5">Chargement des élèves ...</p>
-  </ngx-spinner>
-
-  <div *ngIf="(dataLoaded | async)">
-    <div class="row">
-      <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-left">
-          <li class="breadcrumb-item"><a routerLink="/plannings">Plannings</a></li>
-          <li class="breadcrumb-item active">Pointage</li>
-        </ol>
-      </div>
-      <div class="col-sm-6">
-      </div>
-    </div>
-    <form class="" action="" method="POST" [formGroup]="presenceForm">
-      <input type="hidden" name="_token" value="ilQzY07iiLWigwyNt5H3Hom29MVQlq9XPzeNjG7b">
-      <div class="card">
-        <div class="card-header">
-          <span class="{{status[planning.status].class}} text-capitalize text-sm">
-            {{ status[planning.status].text }}
-            <i class="{{status[planning.status].icon}}"></i>
-          </span>
-          <span class="text-bold text-sm float-right">
-            Fiche de présence de la classe {{planning.subclass_name}}
-          </span>
-
+<div class="p-3">
+  <div id="pointing-content" class="position-relative">
+    <ngx-spinner [fullScreen]="false" name="pointing-spinner" bdColor="rgba(255,255,255,.5)" size="medium"
+      color="#343a40" type="line-scale">
+      <p class="text-dark text-bold mt-5">Chargement des élèves ...</p>
+    </ngx-spinner>
+    <div *ngIf="dataLoaded | async" id="pointing-form">
+      <div class="row">
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-left">
+            <li class="breadcrumb-item"><a routerLink="/plannings">Plannings</a></li>
+            <li class="breadcrumb-item active">Pointage</li>
+          </ol>
         </div>
-
-        <div class="card-body table-responsive p-0" id="presence" formArrayName="presences">
-          <table id="studentPresenceTable" class="table border text-nowrap table-sm" style="page-break-inside:always;">
-            <tbody>
-              <tr id="planning-informations" style="background-color: aliceblue;">
-                <th class="text-right" rowspan="2" colspan="1">
-                  <h5 id="planning-date" class="text-capitalize">{{planning.planning_date | date:'EEEE d MMMM y':
-                    undefined:
-                    'fr'}}</h5>
-                  <p>
-                    <span id="planning-hour">{{planning.planning_date + ' ' + planning.start | date: 'shortTime':
+        <div class="col-sm-6">
+        </div>
+      </div>
+      <form class="" action="" method="POST" [formGroup]="presenceForm">
+        <input type="hidden" name="_token" value="ilQzY07iiLWigwyNt5H3Hom29MVQlq9XPzeNjG7b">
+        <div class="card">
+          <div class="card-header">
+            <span class="{{status[planning.status].class}} text-capitalize text-sm">
+              {{ status[planning.status].text }}
+              <i class="{{status[planning.status].icon}}"></i>
+            </span>
+            <span class="text-bold text-sm float-right">
+              Fiche de présence de la classe {{planning.subclass_name}}
+            </span>
+          </div>
+          <div class="card-body table-responsive p-0" id="presence" formArrayName="presences">
+            <table id="studentPresenceTable" class="table border text-nowrap table-sm"
+              style="page-break-inside:always;">
+              <tbody>
+                <tr id="planning-informations" style="background-color: aliceblue;">
+                  <th class="text-right" rowspan="2" colspan="1">
+                    <h5 id="planning-date" class="text-capitalize">{{planning.planning_date | date:'EEEE d MMMM y':
                       undefined:
-                      'fr'}} à {{planning.planning_date + ' ' + planning.end | date: 'shortTime':
-                      undefined: 'fr'}}</span> -
-                    <span class="text-uppercase">{{planning.place}}</span>
-                  </p>
-                </th>
-                <th class="text-right" rowspan="1" colspan="5">
-                  <h2 id="course-name" class="text-uppercase">{{planning.subject_description}} -
-                    {{planning.subject_name}}</h2>
-                  <h5 id="professor-name" class="text-capitalize">{{planning.professor_name}}</h5>
-                </th>
-              </tr>
-              <tr></tr>
-              <div id="table-content" style="display: contents;" *ngIf="students.length !== 0; else noStudentAlert">
-                <tr style="background: rgb(248, 248, 237);">
-                  <th>Nom et prénoms</th>
-                  <th class="text-center">En salle</th>
-                  <th class="text-center">Présent</th>
-                  <th class="text-center">En Retard</th>
-                  <th class="text-center">Heure d'arrivée</th>
-                  <th class="text-right">Commentaires</th>
+                      'fr'}}</h5>
+                    <p>
+                      <span id="planning-hour">{{planning.planning_date + ' ' + planning.start | date: 'shortTime':
+                        undefined:
+                        'fr'}} à {{planning.planning_date + ' ' + planning.end | date: 'shortTime':
+                        undefined: 'fr'}}</span> -
+                      <span class="text-uppercase">{{planning.place}}</span>
+                    </p>
+                  </th>
+                  <th class="text-right" rowspan="1" colspan="5">
+                    <h2 id="course-name" class="text-uppercase">{{planning.subject_description}} -
+                      {{planning.subject_name}}</h2>
+                    <h5 id="professor-name" class="text-capitalize">{{planning.professor_name}}</h5>
+                  </th>
                 </tr>
-                <tr *ngFor="let student of students; let index = index" formGroupName="{{index}}" class="table-row" [ngClass]="{'is-remote': student.is_remote}">
-                  <input type="hidden" formControlName="student_id" [(ngModel)]="student.student_id" />
-                  <input type="hidden" formControlName="planning_id" [(ngModel)]="planning.id" />
-                  <input type="hidden" formControlName="subject_id" [(ngModel)]="planning.subject_id" />
-                  <td class="text-capitalize border text-dark">
-                    <span>
-                      {{ [student.first_name, student.last_name] | concatPipe }}
-                      <i *ngIf="student.is_remote" class="fas fa-desktop text-sm ml-1"></i>
-                    </span>
-                  </td>
-                  <td class="text-center border">
-                    <div class="icheck-success d-inline">
-                      <input type="checkbox" id="a{{index}}" formControlName="is_present_class"
-                        [(ngModel)]="presenceForm.value.presences[index].is_present_class"
-                        (change)="onChangePresentClass(index, $event)" [attr.disabled]="done || student.is_remote ? '' : null">
-                      <label for="a{{index}}">
-                      </label>
-                    </div>
-                  </td>
-                  <td class="text-center border">
-                    <div class="icheck-primary d-inline">
-                      <input type="checkbox" id="b{{index}}" formControlName="is_present"
-                        [(ngModel)]="presenceForm.value.presences[index].is_present"
-                        (change)="onChangePresent(index, $event)" [attr.disabled]="done ? '' : null">
-                      <label for="b{{index}}">
-                      </label>
-                    </div>
-                  </td>
-                  <td class="text-center border">
-                    <div class="icheck-danger d-inline">
-                      <input type="checkbox" id="c{{index}}" formControlName="is_late"
-                        [(ngModel)]="presenceForm.value.presences[index].is_late" [attr.disabled]="''">
-                      <label for="c{{index}}">
-                      </label>
-                    </div>
-                  </td>
-                  <td class="border p-0">
-                    <input type="time" class="form-control border-0 text-center" formControlName="arriving_time"
-                      [readonly]="done" [(ngModel)]="presenceForm.value.presences[index].arriving_time"
-                      (change)="onArrivingTimeChange(index, $event)" [ngClass]="{'is-remote': student.is_remote}"/>
-                  </td>
-                  <td class="border p-0">
-                    <textarea class="form-control border-0" rows="2" formControlName="comment"
-                      [readonly]="done" [ngClass]="{'is-remote': student.is_remote}"></textarea>
-                  </td>
-                </tr>
-              </div>
-            </tbody>
-          </table>
-          <ng-template #noStudentAlert>
-            <td class="alert alert-warning text-center" role="alert" colspan="6">
-              <i class="fas fa-exclamation-circle"></i>
-              <b>Aucun étudiant dans cette classe.</b>
-            </td>
-          </ng-template>
+                <tr></tr>
+                <div id="table-content" style="display: contents;" *ngIf="students.length !== 0; else noStudentAlert">
+                  <tr style="background: rgb(248, 248, 237);">
+                    <th>Nom et prénoms</th>
+                    <th class="text-center">En salle</th>
+                    <th class="text-center">Présent</th>
+                    <th class="text-center">En Retard</th>
+                    <th class="text-center">Heure d'arrivée</th>
+                    <th class="text-right">Commentaires</th>
+                  </tr>
+                  <tr *ngFor="let student of students; let index = index" formGroupName="{{index}}" class="table-row"
+                    [ngClass]="{'is-remote': student.is_remote}">
+                    <input type="hidden" formControlName="student_id" [(ngModel)]="student.student_id" />
+                    <input type="hidden" formControlName="planning_id" [(ngModel)]="planning.id" />
+                    <input type="hidden" formControlName="subject_id" [(ngModel)]="planning.subject_id" />
+                    <td class="text-capitalize border text-dark">
+                      <span>
+                        {{ [student.first_name, student.last_name] | concatPipe }}
+                        <i *ngIf="student.is_remote" class="fas fa-desktop text-sm ml-1"></i>
+                      </span>
+                    </td>
+                    <td class="text-center border">
+                      <div class="icheck-success d-inline">
+                        <input type="checkbox" id="a{{index}}" formControlName="is_present_class"
+                          [(ngModel)]="presenceForm.value.presences[index].is_present_class"
+                          (change)="onChangePresentClass(index, $event)"
+                          [attr.disabled]="done || student.is_remote ? '' : null">
+                        <label for="a{{index}}">
+                        </label>
+                      </div>
+                    </td>
+                    <td class="text-center border">
+                      <div class="icheck-primary d-inline">
+                        <input type="checkbox" id="b{{index}}" formControlName="is_present"
+                          [(ngModel)]="presenceForm.value.presences[index].is_present"
+                          (change)="onChangePresent(index, $event)" [attr.disabled]="done ? '' : null">
+                        <label for="b{{index}}">
+                        </label>
+                      </div>
+                    </td>
+                    <td class="text-center border">
+                      <div class="icheck-danger d-inline">
+                        <input type="checkbox" id="c{{index}}" formControlName="is_late"
+                          [(ngModel)]="presenceForm.value.presences[index].is_late" [attr.disabled]="''">
+                        <label for="c{{index}}">
+                        </label>
+                      </div>
+                    </td>
+                    <td class="border p-0">
+                      <input type="time" class="form-control border-0 text-center" formControlName="arriving_time"
+                        [readonly]="done" [(ngModel)]="presenceForm.value.presences[index].arriving_time"
+                        (change)="onArrivingTimeChange(index, $event)" [ngClass]="{'is-remote': student.is_remote}" />
+                    </td>
+                    <td class="border p-0">
+                      <textarea class="form-control border-0" rows="2" formControlName="comment" [readonly]="done"
+                        [ngClass]="{'is-remote': student.is_remote}"></textarea>
+                    </td>
+                  </tr>
+                </div>
+              </tbody>
+            </table>
+            <ng-template #noStudentAlert>
+              <td class="alert alert-warning text-center" role="alert" colspan="6">
+                <i class="fas fa-exclamation-circle"></i>
+                <b>Aucun étudiant dans cette classe.</b>
+              </td>
+            </ng-template>
+          </div>
         </div>
-      </div>
-      <div *ngIf="students.length !== 0" id="btn-group">
-        <div class="btn-group" role="group" aria-label="Basic example">
-          <a *ngIf="planning.status > 0" (click)="openPDF()" class="mb-3 btn btn-mat btn-primary" sty="">Imprimer la
-            fiche</a>
-          <a *ngIf="planning.status !== 2" (click)="savePresences()" class="mb-3 btn btn-mat btn-success"
-            sty="">Sauvegarder</a>
-          <a *ngIf="planning.status !== 2" (click)="endPlanning()" class="mb-3 btn btn-mat btn-danger" sty="">Terminer
-            le cours</a>
+        <div *ngIf="students.length !== 0" id="btn-group">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <a *ngIf="planning.status > 0" (click)="openPDF()" class="mb-3 btn btn-mat btn-primary" sty="">Imprimer la
+              fiche</a>
+            <a *ngIf="planning.status !== 2" (click)="savePresences()" class="mb-3 btn btn-mat btn-success"
+              sty="">Sauvegarder</a>
+            <a *ngIf="planning.status !== 2" (click)="endPlanning()" class="mb-3 btn btn-mat btn-danger" sty="">Terminer
+              le cours</a>
+          </div>
         </div>
-      </div>
-    </form>
-    <hr>
+      </form>
+    </div>
+  </div>
+  <hr>
+  <div *ngIf="(dataLoaded | async)">
     <app-planning-chart [planning]="planning" [students]="students"></app-planning-chart>
   </div>
 </div>

@@ -1,22 +1,30 @@
 <div class=" position-relative">
-  <ngx-spinner [fullScreen]="false" name="chart-spinner" bdColor="rgba(255, 255, 255, .2)" size="default" color="gray"
+  <ngx-spinner [fullScreen]="false" name="chart-spinner" bdColor="rgba(255, 255, 255, .4)" size="default" color="gray"
     type="cube-transition">
     <p class="text-dark mt-5 text-bold">Génération des graphes ...</p>
   </ngx-spinner>
-  <div class="row">
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 p-xl-5 p-lg-5 p-md-5">
-      <canvas id="assiduityChart" height="{{canvasHeight / 2}}"></canvas>
+  <div  id="student-chart-content">
+    <h5 *ngIf="chartsBarHorizontalStackedReady" class="text-dark text-center">Suivi des élèves du cours de <span
+        class="text-uppercase text-bold">{{planning.subject_name}}</span></h5>
+    <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <canvas id="assiduityChart" height="{{canvasHeight / 2}}"></canvas>
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4 p-5">
-      <canvas id="subjectRemoteNotDoneChart" height="{{canvasHeight / 2}}"></canvas>
-    </div>
-    <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4 p-5">
-      <canvas id="subjectRemoteDoneChart" height="{{canvasHeight / 2}}"></canvas>
-    </div>
-    <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4 p-5">
-      <canvas id="subjectRemoteChart" height="{{canvasHeight}}"></canvas>
+  <div  id="course-chart-content">
+    <h5 *ngIf="pieChartReady" class="text-dark text-center">Répartition des heures de cours de <span
+        class="text-uppercase text-bold">{{planning.subject_name}}</span></h5>
+    <div class="row">
+      <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4 p-md-0 p-sm-5">
+        <canvas id="subjectRemoteNotDoneChart" height="{{canvasHeight / 2}}"></canvas>
+      </div>
+      <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4 p-md-0 p-sm-5">
+        <canvas id="subjectRemoteDoneChart" height="{{canvasHeight / 2}}"></canvas>
+      </div>
+      <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4 p-md-0 p-sm-5">
+        <canvas id="subjectRemoteChart" height="{{canvasHeight}}"></canvas>
+      </div>
     </div>
   </div>
 </div>

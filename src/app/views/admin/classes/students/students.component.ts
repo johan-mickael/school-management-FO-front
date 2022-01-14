@@ -2,9 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { ResourceService } from '../../../../services/resource.service'
 import { NgxSpinnerService } from 'ngx-spinner'
 import { ErrorService } from '../../../../services/error.service'
-import { SchoolYear, Student, Subclass } from '../../../../services/interfaces'
-import { ActivatedRoute, Router } from '@angular/router'
-
+import { SchoolYear, Subclass } from '../../../../services/interfaces'
 @Component({
   selector: 'app-students',
   templateUrl: './students.component.html',
@@ -16,8 +14,6 @@ export class StudentsComponent implements OnInit, OnChanges {
     private resourceService: ResourceService,
     private spinnerService: NgxSpinnerService,
     private errorService: ErrorService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router
   ) { }
 
   @Input() subclass: Subclass
@@ -28,6 +24,7 @@ export class StudentsComponent implements OnInit, OnChanges {
   dataLoaded: Promise<boolean>
   loadingCount: number = 0
   selectedStudent: any
+  studentHours: any
 
   dtOptions = {
     pagingType: 'full_numbers',
@@ -71,13 +68,21 @@ export class StudentsComponent implements OnInit, OnChanges {
   }
   async getStudents() {
     try {
-      this.students = await Promise.resolve(
-        this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclass.id + '/' + this.schoolYearId))
-      )
+      const data = await Promise.all([
+        this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclass.id + '/' + this.schoolYearId)),
+        this.resourceService.getPromise(this.resourceService.findAll('charts/students/assisting/' + this.schoolYearId))
+      ])
+      this.students = data[0]
       this.selectedStudent = this.students[0]
+      this.studentHours = data[1]
+      console.log(this.students, this.studentHours)
       this.dataLoaded = Promise.resolve(true)
     } catch (error) {
       this.errorService.handleError(error, 'student-spinner')
     }
+  }
+
+  getStudentHours(student: any) {
+    return this.studentHours.filter((studentHour:any) => studentHour.student_id === student.student_id)[0]
   }
 }

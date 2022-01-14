@@ -36,3 +36,7 @@ table td {
 .is-remote {
   background-color: #fff9e1;
 }
+
+#pointing-content {
+  min-height: 50vh;
+}

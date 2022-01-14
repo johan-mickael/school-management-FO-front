@@ -22,8 +22,8 @@ export class ClassesComponent implements OnInit {
   classes: Class[] = [
     {
       id: 0,
-      name: 'Toutes',
-      description: 'toutes les classes'
+      name: 'Toutes les classes',
+      description: ''
     }
   ];
   subclasses: Subclass[] = [];

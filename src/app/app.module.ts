@@ -26,6 +26,8 @@ import { StudentsComponent } from './views/admin/classes/students/students.compo
 import { SubclassComponent } from './views/admin/classes/subclass/subclass.component';
 import { ToastrModule } from 'ngx-toastr';
 import { PlanningChartComponent } from './views/admin/pointing/planning-chart/planning-chart.component';
+import { StudentFormComponent } from './views/admin/classes/students/student-form/student-form.component';
+import { HourPipe } from './pipe/HourPipe';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -49,6 +51,8 @@ FullCalendarModule.registerPlugins([
     SubclassComponent,
     PlanningChartComponent,
     ConcatPipe,
+    HourPipe,
+    StudentFormComponent,
   ],
   imports: [
     BrowserModule,

@@ -34,54 +34,55 @@ export class PlanningChartComponent implements OnInit {
   studentAssiduity: any
   chartsBarHorizontalStackedReady: Promise<boolean>
   pieChartReady: Promise<boolean>
-  backgroundColorInPlace: string = '#c6adff'
-  backgroundColorRemote: string = '#ffe97a'
+  backgroundColorInPlace: string = '#b38aff'
+  backgroundColorRemote: string = '#ffd65a'
   canvasHeight: number = 300
   barThickness: number = 40
 
   async ngOnInit() {
     this.spinnerService.show('chart-spinner')
     await this.fetchApiData()
+    await this.initCharts()
     this.spinnerService.hide('chart-spinner')
-    this.initCharts()
   }
 
   async fetchApiData() {
     try {
       const data = await Promise.all([
+        this.resourceService.getPromise(this.resourceService.findAll('charts/students/assisting/' + this.planning.subject_id + '/' + this.planning.schoolyear_id)),
         this.resourceService.getPromise(this.resourceService.findAll('charts/subjects/remote/' + this.planning.subject_id + '/' + this.planning.schoolyear_id)),
         this.resourceService.getPromise(this.resourceService.findAll('charts/subjects/remote/' + this.planning.subject_id + '/' + this.planning.schoolyear_id + '/0')),
         this.resourceService.getPromise(this.resourceService.findAll('charts/subjects/remote/' + this.planning.subject_id + '/' + this.planning.schoolyear_id + '/2')),
-        this.resourceService.getPromise(this.resourceService.findAll('charts/students/assisting/' + this.planning.subject_id + '/' + this.planning.schoolyear_id))
       ])
-      this.subjectRemoteData = await data[0].map((item: any) => ({
+      this.studentAssiduity = await data[0]
+      this.chartsBarHorizontalStackedReady = Promise.resolve(true)
+      this.subjectRemoteData = await data[1].map((item: any) => ({
         name: item.is_remote ? this.remoteLabel : this.inPlaceLabel,
         value: item.hours
       } as ChartData))
       this.totalHours = this.subjectRemoteData.reduce((sum, current) => +sum + +current.value, 0)
-      this.subjectRemoteDataNotDone = await data[1].map((item: any) => ({
+      this.subjectRemoteDataNotDone = await data[2].map((item: any) => ({
         name: item.is_remote ? this.remoteLabel : this.inPlaceLabel,
         value: item.hours
       } as ChartData))
-      this.subjectRemoteDataDone = await data[2].map((item: any) => ({
+      this.subjectRemoteDataDone = await data[3].map((item: any) => ({
         name: item.is_remote ? this.remoteLabel : this.inPlaceLabel,
         value: item.hours
       } as ChartData))
-      this.studentAssiduity = await data[3]
       this.pieChartReady = Promise.resolve(true)
     } catch (error) {
       this.errorService.handleError(error, "chart-spinner")
     }
   }
 
-  initCharts() {
-    this.initChart(this.subjectRemoteData, "subjectRemoteChart", "Répartition totale des cours")
-    this.initChart(this.subjectRemoteDataNotDone, "subjectRemoteNotDoneChart", "Cours à venir")
-    this.initChart(this.subjectRemoteDataDone, "subjectRemoteDoneChart", "Cours terminé")
-    this.assiduityChart()
+  async initCharts() {
+    await this.assiduityChart()
+    this.initPieChart(this.subjectRemoteData, "subjectRemoteChart", "Répartition totale des cours")
+    this.initPieChart(this.subjectRemoteDataNotDone, "subjectRemoteNotDoneChart", "Cours à venir")
+    this.initPieChart(this.subjectRemoteDataDone, "subjectRemoteDoneChart", "Cours terminé")
   }
 
-  initChart(data: any, canvasId: string, title: string) {
+  async initPieChart(data: any, canvasId: string, title: string) {
     if (data.length < 1) {
       $('#' + canvasId).hide()
       return
@@ -126,10 +127,6 @@ export class PlanningChartComponent implements OnInit {
   }
 
   assiduityChart() {
-    const label = (tooltipItems: any, data: any) => {
-      return tooltipItems.xLabel
-    }
-
     return new Chart("assiduityChart", {
       type: 'bar',
       data: {
@@ -144,13 +141,13 @@ export class PlanningChartComponent implements OnInit {
           {
             label: this.presentLabel,
             data: this.studentAssiduity.map((assiduity: any) => assiduity.assisting_duration),
-            backgroundColor: '#a6ffac',
+            backgroundColor: '#79cf70',
             stack: this.assiduityStack,
           },
           {
             label: this.absentLabel,
             data: this.studentAssiduity.map((assiduity: any) => assiduity.non_assisting_duration),
-            backgroundColor: '#ffad91',
+            backgroundColor: '#ff5f6e',
             stack: this.assiduityStack,
           },
           {
