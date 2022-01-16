@@ -23,7 +23,7 @@
             </div>
           </div>
           <span class="text-gray"
-            *ngIf="form.controls['username'].invalid && (form.controls['username'].dirty || form.controls['username'].touched)">
+            *ngIf="form.controls['username'].invalid">
             <small *ngIf="form.get('username')?.hasError('required')">
               Veuillez saisir votre nom d'utilisateur.
             </small>
@@ -40,7 +40,7 @@
             </div>
           </div>
           <span class="text-gray"
-            *ngIf="form.controls['password'].invalid && (form.controls['password'].dirty || form.controls['password'].touched)">
+            *ngIf="form.controls['password'].invalid">
             <small *ngIf="form.get('password')?.hasError('required')">
               Veuillez saisir votre mot de passe.
             </small>

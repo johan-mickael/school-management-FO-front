@@ -16,8 +16,8 @@ export class LoginComponent implements OnInit {
   passwordMinLength: number = 5
 
   form: FormGroup = this.fb.group({
-    username: ['', [Validators.email, Validators.required]],
-    password: ['', [Validators.required, Validators.minLength(this.passwordMinLength)]]
+    username: [null, [Validators.email, Validators.required]],
+    password: [null, [Validators.required, Validators.minLength(this.passwordMinLength)]]
   })
 
   error: any
