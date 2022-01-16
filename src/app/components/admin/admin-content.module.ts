@@ -29,6 +29,7 @@ import { ConcatPipe } from 'src/app/pipe/ConcatPipe';
 import { HourPipe } from 'src/app/pipe/HourPipe';
 import { ErrorService } from 'src/app/services/error.service';
 import { PageUtil } from 'src/app/utils/page.util';
+import { PlanningFormComponent } from './plannings/planning-form/planning-form.component';
 registerLocaleData(localeFr, 'fr');
 
 FullCalendarModule.registerPlugins([
@@ -53,6 +54,7 @@ FullCalendarModule.registerPlugins([
     HourPipe,
     StudentFormComponent,
     AdminContentComponent,
+    PlanningFormComponent,
   ],
   imports: [
     AdminContentRoutingModule,
