@@ -1,0 +1,76 @@
+<ngx-spinner [fullScreen]="true" name="login-spinner" bdColor="rgba(255,255,255,.5)" size="medium" color="#343a40"
+  type="line-scale">
+  <p class="text-dark text-bold mt-5">Vérification en cours ...</p>
+</ngx-spinner>
+<div class="login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <img src="/assets/img/logo/logo-tiny-purple-250.png" height="40" alt="Logo Estiam" srcset="">
+      <b class="text-gray-dark">Admin</b>
+    </div>
+    <!-- /.login-logo -->
+    <div class="card shadow">
+      <div class="card-body login-card-body">
+        <p class="text-sm-center text-bold text-gray">Entrez vos identifiants</p>
+
+        <form [formGroup]="form" (ngSubmit)="submitForm()">
+          <div class="input-group">
+            <input type="email" class="form-control" placeholder="Email" [formControlName]="'username'">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-user"></span>
+              </div>
+            </div>
+          </div>
+          <span class="text-gray"
+            *ngIf="form.controls['username'].invalid && (form.controls['username'].dirty || form.controls['username'].touched)">
+            <small *ngIf="form.get('username')?.hasError('required')">
+              Veuillez saisir votre nom d'utilisateur.
+            </small>
+            <small *ngIf="form.get('username')?.hasError('email')">
+              Exemple: guest@email.com
+            </small>
+          </span>
+          <div class="input-group mt-2">
+            <input type="password" class="form-control" placeholder="Mot de passe" [formControlName]="'password'">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+          <span class="text-gray"
+            *ngIf="form.controls['password'].invalid && (form.controls['password'].dirty || form.controls['password'].touched)">
+            <small *ngIf="form.get('password')?.hasError('required')">
+              Veuillez saisir votre mot de passe.
+            </small>
+            <small *ngIf="form.get('password')?.hasError('minlength')">
+              Le mot de passe doit avoir au moins {{passwordMinLength}} caractères.
+            </small>
+          </span>
+          <div class="row mt-2">
+            <div class="col">
+              <button type="submit" class="btn bg-purple btn-block" [disabled]="form.invalid">Se connecter</button>
+            </div>
+          </div>
+          <div *ngIf="error" class="row mt-1 text-sm text-center">
+            <div class="col">
+              <span class="text-danger">{{error.error}}</span>
+            </div>
+          </div>
+          <div *ngIf="message" class="row mt-1 text-sm text-center">
+            <div class="col">
+              <span class="text-info">{{message}}</span>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- /.login-card-body -->
+    </div>
+    <div id="copyright" class="text-center mt-2">
+      <strong class="text-dark">&copy;2022 <a href="https://johanmickael-portfolio.herokuapp.com/" target="_blank">Johan
+          Mickaël</a>.</strong>
+      Tous droits réservés.
+    </div>
+  </div>
+</div>

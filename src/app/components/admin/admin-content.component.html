@@ -1,0 +1,31 @@
+<div id="wrapper" class="wrapper">
+
+  <!-- Preloader -->
+  <!-- <div class="preloader flex-column justify-content-center align-items-center">
+        <img class="animation__shake" src="assets/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+    </div> -->
+  <app-nav></app-nav>
+  <app-side></app-side>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <router-outlet></router-outlet>
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+    <strong>Copyright &copy; 2022 <a href="https://johanmickael-portfolio.herokuapp.com/" target="_blank">Johan
+        Mickaël</a>.</strong>
+    All rights reserved.
+    <div class="float-right d-none d-sm-inline-block">
+      <b>Version</b> mvp
+    </div>
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+  <button (click)="topFunction()" id="myBtn" title="Go to top" type="button" class="btn text-sm btn-floating btn-lg">
+    <i class="fas fa-arrow-up"></i></button>
+</div>

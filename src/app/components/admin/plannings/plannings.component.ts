@@ -75,7 +75,7 @@ export class PlanningsComponent implements OnInit, OnDestroy {
     dayMaxEvents: true,
     droppable: false,
     height: '88vh',
-    eventClick: (el) => this.router.navigate(['plannings', el.event.extendedProps['planningId']])
+    eventClick: (el) => this.router.navigate(['admin/plannings', el.event.extendedProps['planningId']])
   }
 
   message: string = ''
@@ -118,7 +118,6 @@ export class PlanningsComponent implements OnInit, OnDestroy {
         this.resourceService.getPromise(this.resourceService.findAll('subclasses')),
         this.resourceService.getPromise(this.resourceService.findAll('schoolyears')),
       ])
-
       this.subclasses = [this.subclasses[0], ...data[0] as Subclass[]]
       this.schoolYears = data[1] as SchoolYear[]
       this.schoolyearId = this.schoolYears[0].id

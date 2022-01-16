@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ErrorService } from '../../../services/error.service';
 import { Subscription } from 'rxjs';
+import { ErrorService } from '../../../../services/error.service';
 
 @Component({
   selector: 'app-errorpage',

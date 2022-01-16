@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, AfterContentInit, ViewChild, ElementRef, Inject, Input, AfterContentChecked, ViewChildren, QueryList } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { ErrorService } from '../../../services/error.service'
 import { NgxSpinnerService } from 'ngx-spinner'
 import { ResourceService } from '../../../services/resource.service'

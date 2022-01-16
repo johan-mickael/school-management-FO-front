@@ -8,7 +8,7 @@
       <div class="row">
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-left">
-            <li class="breadcrumb-item"><a routerLink="/plannings">Plannings</a></li>
+            <li class="breadcrumb-item"><a routerLink="/admin/plannings">Plannings</a></li>
             <li class="breadcrumb-item active">Pointage</li>
           </ol>
         </div>
@@ -37,17 +37,24 @@
                       undefined:
                       'fr'}}</h5>
                     <p>
+
                       <span id="planning-hour">{{planning.planning_date + ' ' + planning.start | date: 'shortTime':
                         undefined:
                         'fr'}} à {{planning.planning_date + ' ' + planning.end | date: 'shortTime':
-                        undefined: 'fr'}}</span> -
-                      <span class="text-uppercase">{{planning.place}}</span>
+                        undefined: 'fr'}}</span>
+                      <span *ngIf="planning.place" class="text-uppercase">- {{planning.place}}</span>
+                      <span class="text-bold badge ml-2" [ngClass]="{'bg-warning': planning.is_remote, 'bg-purple': !planning.is_remote}">
+                        {{planning.is_remote ?
+                        'distanciel' : 'présenciel'}} </span>
                     </p>
                   </th>
                   <th class="text-right" rowspan="1" colspan="5">
-                    <h2 id="course-name" class="text-uppercase">{{planning.subject_description}} -
-                      {{planning.subject_name}}</h2>
-                    <h5 id="professor-name" class="text-capitalize">{{planning.professor_name}}</h5>
+                    <h3 id="course-name" class="text-uppercase">{{planning.subject_description}} -
+                      {{planning.subject_name}}</h3>
+                    <div class="font-weight-normal">
+                      <span class="text-capitalize text-bold">{{planning.professor_name}}</span>
+
+                    </div>
                   </th>
                 </tr>
                 <tr></tr>

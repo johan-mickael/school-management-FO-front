@@ -42,7 +42,6 @@ export class StudentsComponent implements OnInit, OnChanges {
     this.loadingCount++
     if (this.loadingCount == 1) return
     await this.getStudents()
-    this.pageUtils.scroll('students')
     this.spinnerService.hide('student-spinner')
   }
   async onSchoolYearChange() {
@@ -78,7 +77,6 @@ export class StudentsComponent implements OnInit, OnChanges {
       this.students = data[0]
       this.selectedStudent = this.students[0]
       this.studentHours = data[1]
-      console.log(this.students, this.studentHours)
       this.dataLoaded = Promise.resolve(true)
     } catch (error) {
       this.errorService.handleError(error, 'student-spinner')

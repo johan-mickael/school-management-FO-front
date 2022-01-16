@@ -1,10 +1,10 @@
 import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ResourceService } from '../../../services/resource.service';
 import { ErrorService } from '../../../services/error.service';
-import { Subclass, Class, SchoolYear } from '../../../services/interfaces';
-import { PageUtils } from 'src/app/utils/pageUtils';
+import { Subclass, Class } from '../../../services/interfaces';
+import { PageUtils } from '../../../utils/pageUtils';
 
 @Component({
   selector: 'app-classes',
@@ -17,6 +17,7 @@ export class ClassesComponent implements OnInit {
     private resourceService: ResourceService,
     private spinnerService: NgxSpinnerService,
     private errorService: ErrorService,
+    public pageUtils: PageUtils
   ) { }
 
   selectedClass: number = 0;
@@ -63,6 +64,11 @@ export class ClassesComponent implements OnInit {
     } catch (error) {
       this.errorService.handleError(error, "class-spinner")
     }
+  }
+
+  setSelectedSubclass(subclass:Subclass) {
+    this.selectedSubclass = subclass
+    this.pageUtils.scroll('students')
   }
 
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable({
@@ -26,8 +26,13 @@ export class ErrorService {
     this.router.navigate(['/errorPage'])
   }
 
-  handleError(message: any, spinner: string) {
-    this.spinnerService.hide(spinner);
-    this.handle(message);
+  async handleError(message: any, spinner: string) {
+    await this.spinnerService.hide(spinner);
+    if(message.status == 401) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      return this.router.navigate(['./login'], { queryParams: { message: message.error }})
+    }
+    return this.handle(message);
   }
 }
