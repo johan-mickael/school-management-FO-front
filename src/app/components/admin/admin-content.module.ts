@@ -22,13 +22,13 @@ import { PointingComponent } from './pointing/pointing.component';
 import { StudentsComponent } from './classes/students/students.component';
 import { SubclassComponent } from './classes/subclass/subclass.component';
 import { PlanningChartComponent } from './pointing/planning-chart/planning-chart.component';
-import { ConcatPipe } from '../../pipe/ConcatPipe';
-import { HourPipe } from '../../pipe/HourPipe';
 import { StudentFormComponent } from './classes/students/student-form/student-form.component';
 import { AdminContentComponent } from './admin-content.component';
-import { ErrorService } from '../../services/error.service';
-import { PageUtils } from '../../utils/pageUtils';
 import { AdminContentRoutingModule } from './admin-content-routing-module';
+import { ConcatPipe } from 'src/app/pipe/ConcatPipe';
+import { HourPipe } from 'src/app/pipe/HourPipe';
+import { ErrorService } from 'src/app/services/error.service';
+import { PageUtil } from 'src/app/utils/page.util';
 registerLocaleData(localeFr, 'fr');
 
 FullCalendarModule.registerPlugins([
@@ -70,7 +70,7 @@ FullCalendarModule.registerPlugins([
       closeButton: true,
     }),
   ],
-  providers: [ErrorService, DatePipe, PageUtils],
+  providers: [ErrorService, DatePipe, PageUtil],
   bootstrap: [AdminContentComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

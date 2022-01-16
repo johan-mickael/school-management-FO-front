@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core'
-import { ResourceService } from '../../../../services/resource.service'
 import { NgxSpinnerService } from 'ngx-spinner'
-import { ErrorService } from '../../../../services/error.service'
-import { SchoolYear, Subclass } from '../../../../services/interfaces'
-import { PageUtils } from '../../../../utils/pageUtils';
+import { ErrorService } from 'src/app/services/error.service'
+import { SchoolYear, Subclass } from 'src/app/services/interfaces';
+import { ResourceService } from 'src/app/services/resource.service'
+import { PageUtil } from 'src/app/utils/page.util';
 @Component({
   selector: 'app-students',
   templateUrl: './students.component.html',
@@ -15,7 +15,7 @@ export class StudentsComponent implements OnInit, OnChanges {
     private resourceService: ResourceService,
     private spinnerService: NgxSpinnerService,
     private errorService: ErrorService,
-    public pageUtils: PageUtils
+    public pageUtil: PageUtil
   ) { }
 
   @Input() subclass: Subclass
@@ -38,6 +38,7 @@ export class StudentsComponent implements OnInit, OnChanges {
     await this.fetchApiData()
   }
   async ngOnChanges(changes: SimpleChanges) {
+    await this.pageUtil.scroll('students')
     await this.spinnerService.show('student-spinner')
     this.loadingCount++
     if (this.loadingCount == 1) return
@@ -69,6 +70,7 @@ export class StudentsComponent implements OnInit, OnChanges {
     }
   }
   async getStudents() {
+    await this.pageUtil.scroll('students')
     try {
       const data = await Promise.all([
         this.resourceService.getPromise(this.resourceService.findAll('subclasses/students/' + this.subclass.id + '/' + this.schoolYearId)),
@@ -85,5 +87,10 @@ export class StudentsComponent implements OnInit, OnChanges {
 
   getStudentHours(student: any) {
     return this.studentHours.filter((studentHour:any) => studentHour.student_id === student.student_id)[0]
+  }
+
+  setSelectedStudent(student:any) {
+    this.selectedStudent = student
+    this.pageUtil.scroll('studentForm')
   }
 }

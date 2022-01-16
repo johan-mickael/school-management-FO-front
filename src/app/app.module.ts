@@ -16,9 +16,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData, DatePipe } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { ToastrModule } from 'ngx-toastr';
-import { PageUtils } from './utils/pageUtils';
 import { LoginComponent } from './components/auth/login/login.component';
 import { AdminContentModule } from './components/admin/admin-content.module';
+import { PageUtil } from './utils/page.util';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -51,7 +51,7 @@ FullCalendarModule.registerPlugins([
     }),
     AdminContentModule
   ],
-  providers: [ErrorService, DatePipe, PageUtils],
+  providers: [ErrorService, DatePipe, PageUtil],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

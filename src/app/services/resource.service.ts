@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ResourceService {
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,
+    private toastService: ToastService,) {
 
   }
 
@@ -48,6 +50,7 @@ export class ResourceService {
   }
 
   postData(resource: string, input: any) {
+    const role = localStorage.getItem('role') as unknown as number
     const options = {
       headers: {
         'Access-Control-Allow-Origin': '*',
@@ -55,7 +58,7 @@ export class ResourceService {
         'Authorization': `${localStorage.getItem('token')}`
       }, mode: 'no-cors',
     }
-    return this.httpClient.post(this.url + resource, JSON.stringify(input), options)
+    return this.httpClient.post(this.url + resource, JSON.stringify({data: input, role: localStorage.getItem('role')}), options)
   }
 
   getPromise(observable: Observable<object>) {

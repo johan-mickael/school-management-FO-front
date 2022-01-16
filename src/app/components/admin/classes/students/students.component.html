@@ -1,4 +1,4 @@
-<div class="position-relative">
+<div id="students" class="position-relative">
   <ngx-spinner [fullScreen]="false" name="student-spinner" bdColor="rgba(255, 255, 255, .8)" size="medium"
     color="#343a40" type="ball-scale-ripple">
     <p class="text-dark mt-5 text-bold">Chargement des étudiants ...</p>
@@ -30,7 +30,7 @@
           </div>
           <div class="card-body table-responsive p-0">
             <div class="list-group" *ngIf="students.length > 0; else noStudentAlert">
-              <div *ngFor="let student of students" (click)="selectedStudent = student"
+              <div *ngFor="let student of students" (click)="setSelectedStudent(student)"
                 [ngClass]="{'selected-student text-bold': selectedStudent == student}"
                 class="list-group-item list-group-item-action" aria-current="true">
                 <span class="mr-2"><img src="assets/img/user.jpg" alt="Product 1"
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
+      <div id="studentForm" class="col-md-6">
         <app-student-form *ngIf="selectedStudent" [student]="selectedStudent" [studentHours]="getStudentHours(selectedStudent)"></app-student-form>
       </div>
     </div>

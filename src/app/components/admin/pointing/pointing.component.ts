@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core'
-import { ErrorService } from '../../../services/error.service'
-import { NgxSpinnerService } from 'ngx-spinner'
-import { ResourceService } from '../../../services/resource.service'
 import { Subscription } from 'rxjs'
-import { Planning } from '../../../services/interfaces'
 import { ActivatedRoute } from '@angular/router'
 import { FormBuilder, FormArray } from '@angular/forms'
-import { ToastService } from '../../../services/toast.service'
 // @ts-ignore
 import * as html2pdf from 'html2pdf.js';
-import { PageUtils } from '../../../utils/pageUtils';
+import { ResourceService } from 'src/app/services/resource.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ErrorService } from 'src/app/services/error.service';
+import { ToastService } from 'src/app/services/toast.service';
+import { PageUtil } from 'src/app/utils/page.util';
+import { Planning } from 'src/app/services/interfaces';
 
 @Component({
   selector: 'app-pointing',
@@ -25,7 +25,7 @@ export class PointingComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toastService: ToastService,
-    public pageUtils: PageUtils
+    public pageUtil: PageUtil
   ) { }
 
   presenceForm = this.formBuilder.group({
@@ -77,8 +77,15 @@ export class PointingComponent implements OnInit {
         this.resourceService.getPromise(this.resourceService.postData('presences/save', this.presenceForm.value))
       )
       await this.fetchApiData()
-      this.toastService.show('Pointage étudiant', 'Présence enregistré avec succès.', 'success')
-    } catch (error) {
+      this.toastService.show('Pointage étudiant', res, 'success')
+      this.pageUtil.scroll('charts')
+    } catch (error: any) {
+      if (error.status === 403) {
+        console.log(error)
+        this.toastService.show('Vous êtes en mode invité.', error.error, 'error')
+        await this.spinnerService.hide("pointing-spinner")
+        return
+      }
       await this.errorService.handleError(error, "pointing-spinner")
     }
   }
@@ -91,8 +98,13 @@ export class PointingComponent implements OnInit {
           this.resourceService.getPromise(this.resourceService.postData('presences/terminate', this.presenceForm.value))
         )
         await this.fetchApiData()
-        this.toastService.show('Pointage étudiant', 'Cours terminé avec succès.', 'info')
-      } catch (error) {
+        this.toastService.show('Pointage étudiant', res, 'info')
+      } catch (error: any) {
+        if (error.status === 403) {
+          this.toastService.show('Vous êtes en mode invité.', error.error, 'error')
+          await this.spinnerService.hide("pointing-spinner")
+          return
+        }
         await this.errorService.handleError(error, "pointing-spinner")
       }
     }
@@ -242,6 +254,6 @@ export class PointingComponent implements OnInit {
         }
       })
       .save(outputName);
-      this.toastService.show('Pointage étudiant', 'Fiche de présence téléchargé.', 'info')
+    this.toastService.show('Pointage étudiant', 'Fiche de présence téléchargé.', 'info')
   }
 }

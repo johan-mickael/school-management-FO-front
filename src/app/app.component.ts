@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PageUtils } from 'src/app/utils/pageUtils';
+import { PageUtil } from './utils/page.util';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
   title = 'my estiam';
 
   constructor(
-    public pageUtils: PageUtils
+    public pageUtil: PageUtil
   ) {}
 
   ngOnInit(): void {
@@ -26,10 +26,6 @@ export class AppComponent implements OnInit {
         }
       };
     }
-  }
-
-  topFunction() {
-    window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
 }

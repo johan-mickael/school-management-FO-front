@@ -140,7 +140,7 @@
     </div>
   </div>
   <hr>
-  <div *ngIf="(dataLoaded | async)">
+  <div id="charts" *ngIf="(dataLoaded | async)">
     <app-planning-chart [planning]="planning" [students]="students"></app-planning-chart>
   </div>
 </div>

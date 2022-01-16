@@ -15,8 +15,10 @@ export class NavComponent implements OnInit {
   }
 
   disconnect() {
+    if(!confirm('Veuillez confirmer pour quitter.')) return
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+    localStorage.removeItem('role')
     this.router.navigate(['./login'])
   }
 
