@@ -3,8 +3,9 @@
     type="cube-transition">
     <p class="text-dark mt-5 text-bold">Génération des graphes ...</p>
   </ngx-spinner>
-  <div  id="student-chart-content">
-    <h5 *ngIf="chartsBarHorizontalStackedReady" class="text-dark text-center">Suivi des élèves du cours de <span
+  <div id="student-chart-content">
+    <h5 *ngIf="chartsBarHorizontalStackedReady" class="text-dark text-center">Suivi des élèves de <span
+        class="text-uppercase text-bold">{{planning.subclass_name}}</span> sur le cours de <span
         class="text-uppercase text-bold">{{planning.subject_name}}</span></h5>
     <div class="row">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -12,8 +13,8 @@
       </div>
     </div>
   </div>
-  <div  id="course-chart-content">
-    <h5 *ngIf="pieChartReady" class="text-dark text-center">Répartition des heures de cours de <span
+  <div id="course-chart-content">
+    <h5 *ngIf="pieChartReady" class="text-dark text-center">Répartition totale des heures de cours de <span
         class="text-uppercase text-bold">{{planning.subject_name}}</span></h5>
     <div class="row">
       <div class="col-xl-4 col-md-4 col-sm-4 col-xs-4 p-md-0 p-sm-5">
