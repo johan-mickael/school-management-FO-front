@@ -66,9 +66,12 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('role', user.user.role)
       await this.spinnerService.hide("login-spinner")
       this.router.navigate(['admin/plannings'])
-    } catch (error) {
+    } catch (error:any) {
       this.message = null
       this.error = error
+      if(error.status === 0) {
+        this.error.error = 'Désolé, une erreur est survenue.'
+      }
       this.spinnerService.hide("login-spinner")
     }
   }
