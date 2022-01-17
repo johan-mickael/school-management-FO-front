@@ -138,9 +138,12 @@ export class PointingComponent implements OnInit {
       setTimeout(() => {
         this.presenceForm.value.presences[index].is_present = true
       }, 0)
-      setTimeout(() => {
-        this.presenceForm.value.presences[index].arriving_time = this.planning.start
-      }, 0)
+      if (!this.presenceForm.value.presences[index].is_late) {
+        setTimeout(() => {
+          this.presenceForm.value.presences[index].arriving_time = this.planning.start
+        }, 0)
+      }
+
     }
   }
 
