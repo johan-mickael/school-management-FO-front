@@ -19,6 +19,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { LoginComponent } from './components/auth/login/login.component';
 import { AdminContentModule } from './components/admin/admin-content.module';
 import { PageUtil } from './utils/page.util';
+import { Error404Component } from './components/error/error404/error404.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -33,6 +34,7 @@ FullCalendarModule.registerPlugins([
   declarations: [
     AppComponent,
     LoginComponent,
+    Error404Component,
   ],
   imports: [
     BrowserModule,
