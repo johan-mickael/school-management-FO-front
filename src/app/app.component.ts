@@ -8,7 +8,7 @@ import { PageUtil } from './utils/page.util';
 })
 export class AppComponent implements OnInit {
 
-  title = 'my estiam';
+  title = 'School';
 
   constructor(
     public pageUtil: PageUtil
